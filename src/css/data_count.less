@@ -1,0 +1,109 @@
+
+#card-3, #card-4, #card-5 {
+    background: none;
+}
+
+.my_data_count {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: auto;
+
+    .card-wrap {
+        padding: 0;
+    }
+    
+    .card {
+        width: 835px;
+        border: 1px solid #e7e7e7;
+        background-color: #fff;
+        padding: 0 15px 16px;
+        margin-top: 10px;
+    
+        &.first {
+            margin-top: 0;
+        }
+    }
+    
+    .title {
+        line-height: 48px;
+        font-size: 16px;
+        color: #333;
+        border-bottom: 1px solid #e9e8e8;
+    }
+    
+    .charts {
+        width: 835px;
+        height: 500px;
+    }
+    
+    .step-box {
+        float: right;
+        margin-top: 11px;
+        font-size: 0;
+        line-height: 26px;
+        color: #bdbdbd;
+    
+        span, .step, .btn {
+            font-size: 14px;
+        }
+    
+        .step, .btn {
+            color: #666666;
+            padding: 0 6px;
+            &.active, &:hover {
+                background: #e9f5ff;
+                color: #249CFF;
+            }
+        }
+
+        .btn {
+            display: none;
+        }
+    
+        .split {
+            display: inline-block;
+            background: #e3e3e3;
+            width: 2px;
+            height: 10px;
+            margin: 0 6px;
+        }
+    }
+    
+    .detail-loading {
+        height: 400px;
+        background-repeat: no-repeat;
+        background-position: center;
+        text-align: center;
+        span {
+            display: inline-block;
+            margin-top: 220px;
+            font-size: 12px;
+            color: #666;
+        }
+    }
+    
+    .empty-main {
+        background-color: #fff;
+        text-align: center;
+        .wrapper {
+            padding-top: 74px;
+            img {
+                width: 150px;
+                height: 146px;
+                position: absolute;
+                left: 0;
+                right: 0;
+                margin: auto;
+            }
+            .main-tips {
+                margin-top: 25px;
+                font-size: 16px;
+                color: #999999;
+            }
+        }
+    }
+
+}

@@ -1,0 +1,241 @@
+@import "./icon.less";
+@import "./tree.less";
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#main {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: #eee;
+    overflow: auto;
+}
+
+.container {
+    min-width: 1200px;
+    max-height: 1600px;
+    margin: 0 auto;
+    position: relative;
+    height: 100%;
+}
+
+.left-side {
+    background: #FFFFFF;
+    width: 258px;
+    position: absolute;
+    top: 24px;
+    bottom: 24px;
+    left: 24px;
+    z-index: 9;
+}
+
+#tree {
+    padding: 20px 10px;
+    margin-left: 0;
+}
+
+.center {
+    background: #FFFFFF;
+    position: absolute;
+    left: 292px;
+    top: 24px;
+    bottom: 24px;
+    right: 24px;
+}
+
+.center-header {
+    
+    .center-title {
+        line-height: 16px;
+        font-size: 16px;
+        border-left: 2px solid #5397E9;
+        padding-left: 6px;
+        color: #333333;
+        margin: 20px;
+    }
+
+    .filter-line {
+        padding: 6px 0;
+        .input-box {
+            float: left;
+            width: 289px;
+
+            label {
+                font-size: 14px;
+                color: #666;
+                width: 100px;
+                line-height: 24px;
+                height: 24px;
+                text-align: right;
+                display: inline-block;
+            }
+            input {
+                width: 144px;
+                padding: 0 8px;
+                border: 1px solid #E3E3E3;
+                font-size: 14px;
+                line-height: 24px;
+                height: 24px;
+                color: #333333;
+            }
+
+            a {
+                font-size: 14px; 
+                line-height: 24px;
+                padding: 0 6px;
+                margin-right: 5px;
+                color: #666;
+
+                &:hover {
+                    color: #0089FF;
+                }
+            }
+        }
+    }
+}
+
+
+.center-body {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 134px;
+    bottom: 20px;
+}
+
+#nlp-group {
+    top: 96px;
+}
+
+.nlp-table-wrap {
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    top: 10px;
+    bottom: 60px;
+    overflow: auto;
+}
+
+.nlp-table {
+    border-collapse: collapse;
+    table-layout: fixed;
+
+    a {
+        color: #666;
+        &:hover {
+            color: #0088FF;
+        }
+    }
+
+    th, td {
+        height: 32px;
+        font-size: 12px;
+        line-height: 18px;
+        border: 1px solid #ddd;
+        color: #666;
+        padding: 0 6px;
+        word-wrap: break-word;
+    }
+
+    th {
+        background: #f7f7f7;
+    }
+
+    td.show-member {
+        width: 32px;
+        a {
+            display: inline-block;
+            width: 32px;
+            line-height: 32px;
+            font-size: 16px;
+            text-align: center;
+        }
+    }
+
+    tr.member {
+        background: #eee;
+    }
+}
+
+.no-company-data {
+    margin: 0 auto;
+}
+
+.center-body {
+    .detail-loading {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #fff;
+        opacity: 0.7;
+        i {
+            display: block;
+            width: 50px;
+            height: 40px;
+            margin: 180px auto 0;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        span {
+            display: block;
+            width: 50px;
+            margin: 0 auto;
+            font-size: 12px;
+            color: #666;
+        }
+    }
+    
+    .empty-main {
+        background-color: #fff;
+        text-align: center;
+        .wrapper {
+            padding-top: 74px;
+            img {
+                width: 150px;
+                height: 146px;
+                position: absolute;
+                left: 0;
+                right: 0;
+                margin: auto;
+            }
+            .main-tips {
+                margin-top: 25px;
+                font-size: 16px;
+                color: #999999;
+            }
+        }
+    }
+    
+    .group-footer {
+        text-align: right;
+        position: absolute;
+        width: 100%;
+        bottom: 10px;
+        right: 24px;
+        .m-pagination {
+            margin-top: 10px;
+            ul {
+                li {
+                    a {
+                        display: block;
+                        width: 20px;
+                        height: 20px;
+                        padding: 7px;
+                        min-width: 20px;
+                    }
+                    &:first-child {
+                        margin: 0;
+                    }
+                }
+            }
+        }
+    }
+}

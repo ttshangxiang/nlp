@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>信贷语义识别</title>
+</head>
+<body>
+    <div id="main">
+        <div class="header wrapper">
+        </div>
+        <div class="nav wrapper">
+            <div class="sub-tags-wrap">
+                <div class="sub-tags">
+                    <a href="javascript:;" class="sub-tags-item active" id="nanjing0_url" data-target="nanjing0">
+                        <span class="sub-tag-name">目录</span>
+                        <span class="sub-tag-num"></span>
+                    </a>
+                    <a href="javascript:;" class="sub-tags-item" id="nanjing1_url" data-target="nanjing1">
+                        <span class="sub-tag-name">评级</span>
+                        <span class="sub-tag-num"></span>
+                    </a>
+                    <a href="javascript:;" class="sub-tags-item" id="nanjing2_url" data-target="nanjing2">
+                        <span class="sub-tag-name">授信信息</span>
+                        <span class="sub-tag-num"></span>
+                    </a>
+                    <a href="javascript:;" class="sub-tags-item" id="nanjing3_url" data-target="nanjing3">
+                        <span class="sub-tag-name">授信调整</span>
+                        <span class="sub-tag-num"></span>
+                    </a>
+                    <a href="javascript:;" class="sub-tags-item" id="nanjing4_url" data-target="nanjing4">
+                        <span class="sub-tag-name">用信信息</span>
+                        <span class="sub-tag-num"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <% var diffTpl2 = require('../public/util').diffTpl2 %>
+        <div class="center wrapper">
+            <div id="nanjing">
+                <div class="icon-loading-static-icon detail-loading"><span>加载中...</span></div>
+                <div class="empty-main">
+                    <div class="wrapper">
+                        <div class="no-company-data icon-no-data-face"></div>
+                        <p class="main-tips">暂无相关信息</p>
+                    </div>
+                </div>
+                <div class="card-wrap">
+                    <div class="card" id="nanjing0">
+                        <div class="header">
+                            <!-- <h3 class="header-text">
+                            目录
+                            </h3> -->
+                        </div>
+                        <div class="content">
+                            <div id="tree"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-wrap">
+                    <div class="card" id="nanjing1"></div>
+                    <script type="text/html" id="nanjing1-tpl">
+                        {{if !$value.empty}}
+                        <div class="header">
+                            <h3 class="header-text">
+                            {{$value.title}}
+                            </h3>
+                        </div>
+                        <div class="customer-code-group">
+                            <div class="customer-code" id="pingji-customer-code">客户编号：{{$value.o_customerID}}</div>
+                        </div>
+                        <div class="sub-title">原始意见</div>
+                        <div class="text-box">
+                            {{#$value.o_phaseOpinion}}
+                        </div>
+                        <div class="sub-title">NLP解析结果</div>
+                        <div class="content">
+                            <table class="table table-normal">
+                                <thead class="thead">
+                                    <tr class="tr">
+                                        <th class="th w40">客户名称</th>
+                                        <th class="th w15">NLP解析</th>
+                                        <th class="th w15">系统评级认定</th>
+                                        <th class="th w15">人工认定</th>
+                                        <th class="th w15">是否一致</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="tr tr-even">
+                                        <td class="td w40">{{$value.o_customerName}}</td>
+                                        <td class="td w15">{{nlpData2($value.nlp_phaseOpinion)}}</td>
+                                        <td class="td w15">{{$value.o_evaluateResult}}</td>
+                                        <td class="td w15">{{$value.o_cognResult}}</td>
+                                        <%=diffTpl2('$value.nlp_compare_evaluate', '$value.nlp_remark_evaluate')%>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        {{else}}
+                        <div class="header">
+                            <h3 class="header-text">
+                            评级(无数据)
+                            </h3>
+                        </div>
+                        <div class="customer-code-group">
+                            <div class="customer-code" id="pingji-customer-code"></div>
+                        </div>
+                        {{/if}}
+                    </script>
+                </div>
+            
+                <div class="card-wrap">
+                    <div class="card card-container" id="nanjing2"></div>
+                    <script type="text/html" id="nanjing2-tpl">
+                        {{each list}}
+                        {{if !$value.empty}}
+                        <div class="sub-card" id="{{$value._id}}">
+                            <div class="header">
+                                <h3 class="header-text">
+                                {{$value.title}}
+                                </h3>
+                            </div>
+                            <div class="customer-code-group">
+                                <div class="customer-code">额度编号: {{$value.o_lineId}}</div>
+                                <div class="customer-code">授信申请流水号: {{$value.o_approveId}}</div>
+                            </div>
+                            <div class="sub-title">原始意见</div>
+                            <div class="text-box">
+                                {{#$value.o_phaseOpinion}}
+                            </div>
+                            <div class="sub-title">NLP解析结果</div>
+                            <div class="content">
+                                <table class="table table-normal">
+                                    <thead class="thead">
+                                        <tr class="tr">
+                                            <th class="th w15">业务要素</th>
+                                            <th class="th w35">NLP解析</th>
+                                            <th class="th w35">信贷</th>
+                                            <th class="th w15">是否一致</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="tr tr-even">
+                                            <th class="th w15">额度类型</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_businessTypeCLName)}}</td>
+                                            <td class="td w35">{{$value.o_clTypeName}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_bizTypeCL', false)%>
+                                        </tr>
+                                        <tr class="tr">
+                                            <th class="th w15">授信额度金额</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_businessSum)}}</td>
+                                            <td class="td w35">{{$value.o_lineSum}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_bizSum', false)%>
+                                        </tr>
+                                        <tr class="tr tr-even">
+                                            <th class="th w15">期限</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_term)}}</td>
+                                            <td class="td w35">{{$value.o_term}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_term', false)%>
+                                        </tr>
+                                        <tr class="tr">
+                                            <th class="th w15">主要担保方式</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_vouchTypeName)}}</td>
+                                            <td class="td w35">{{$value.o_vouchTypeName}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_vouchType', '$value.nlp_remark_vouchType')%>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{/each}}
+                    </script>
+                </div>
+            
+                <div class="card-wrap">
+                    <div class="card card-container" id="nanjing3"></div>
+                    <script type="text/html" id="nanjing3-tpl">
+                        {{each list}}
+                        {{if !$value.empty}}
+                        <div class="sub-card" id="{{$value._id}}">
+                            <div class="header">
+                                <h3 class="header-text">
+                                {{$value.title}}
+                                </h3>
+                            </div>
+                            <div class="customer-code-group">
+                                <div class="customer-code">申请流水号: {{$value.o_approveId}}</div>
+                            </div>
+                            <div class="sub-title">原始意见</div>
+                            <div class="text-box">
+                                {{#$value.o_phaseOpinion}}
+                            </div>
+                            <div class="sub-title">NLP解析结果</div>
+                            <div class="content">
+                                <table class="table table-normal">
+                                    <thead class="thead">
+                                        <tr class="tr">
+                                            <th class="th w25">调整业务要素</th>
+                                            <th class="th w25">NLP解析</th>
+                                            <th class="th w25">原始授信</th>
+                                            <th class="th w25">调整后</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="tr tr-even">
+                                            <th class="th w25">额度类型</th>
+                                            <td class="td w25">{{nlpData2($value.nlp_businessTypeCLName)}}</td>
+                                            <td class="td w25"></td>
+                                            <td class="td w25">{{$value.o_clTypeName}}</td>
+                                        </tr>
+                                        <tr class="tr tr-even">
+                                            <th class="th w25">额度</th>
+                                            <td class="td w25">{{nlpData2($value.nlp_businessSum)}}</td>
+                                            <td class="td w25"></td>
+                                            <td class="td w25">{{$value.o_lineSum}}</td>
+                                        </tr>
+                                        <tr class="tr">
+                                            <th class="th w25">期限</th>
+                                            <td class="td w25">{{nlpData2($value.nlp_term)}}</td>
+                                            <td class="td w25"></td>
+                                            <td class="td w25">{{$value.o_term}}</td>
+                                        </tr>
+                                        <tr class="tr tr-even">
+                                            <th class="th w25">担保方式</th>
+                                            <td class="td w25">{{nlpData2($value.nlp_vouchTypeName)}}</td>
+                                            <td class="td w25"></td>
+                                            <td class="td w25">{{$value.o_vouchTypeName}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{/each}}
+                    </script>
+                </div>
+            
+                <div class="card-wrap">
+                    <div class="card card-container" id="nanjing4"></div>
+                    <script type="text/html" id="nanjing4-tpl">
+                        {{each list}}
+                        {{if !$value.empty}}
+                        <div class="sub-card" id="{{$value._id}}">
+                            <div class="header">
+                                <h3 class="header-text">
+                                {{$value.title}}
+                                </h3>
+                            </div>
+                            <div class="customer-code-group">
+                                <div class="customer-code">额度编号: {{$value.o_pLineID}}</div>
+                                <div class="customer-code">用信编号: {{$value.o_approveId}}</div>
+                            </div>
+                            <div class="sub-title">原始意见</div>
+                            <div class="text-box">
+                                {{#$value.o_phaseOpinion}}
+                            </div>
+                            <div class="sub-title">NLP解析结果</div>
+                            <div class="content">
+                                <table class="table table-normal">
+                                    <thead class="thead">
+                                        <tr class="tr">
+                                            <th class="th w15">业务要素</th>
+                                            <th class="th w35">NLP解析</th>
+                                            <th class="th w35">信贷</th>
+                                            <th class="th w15">是否一致</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="tr tr-even">
+                                            <th class="th w15">业务品种</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_businessTypeName)}}</td>
+                                            <td class="td w35">{{$value.o_businessTypeName}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_bizType', false)%>
+                                        </tr>
+                                        <tr class="tr">
+                                            <th class="th w15">申请金额</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_businessSum)}}</td>
+                                            <td class="td w35">{{$value.o_businessSum}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_bizSum', false)%>
+                                        </tr>
+                                        <tr class="tr tr-even">
+                                            <th class="th w15">币种</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_businessCurrencyName)}}</td>
+                                            <td class="td w35">{{$value.o_businessCurrencyName}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_bizCurrency', false)%>
+                                        </tr>
+                                        <tr class="tr">
+                                            <th class="th w15">期限</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_term)}}</td>
+                                            <td class="td w35">{{$value.o_term}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_term', '$value.nlp_remark_term')%>
+                                        </tr>
+                                        <tr class="tr tr-even">
+                                            <th class="th w15">还款方式</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_corpuspayMethodName)}}</td>
+                                            <td class="td w35">{{$value.o_corpuspayMethodName}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_corpMet', '$value.nlp_remark_corpMet')%>
+                                        </tr>
+                                        <tr class="tr">
+                                            <th class="th w15">支付方式</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_payModeName)}}</td>
+                                            <td class="td w35">{{$value.o_payModeName}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_payMode', false)%>
+                                        </tr>
+                                        <tr class="tr tr-even">
+                                            <th class="th w15">利率</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_businessRate)}}</td>
+                                            <td class="td w35">{{$value.o_businessRate ? ($value.o_businessRate + '%') : ''}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_bizRate', false)%>
+                                        </tr>
+                                        <tr class="tr">
+                                            <th class="th w15">利率浮动比例</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_rateFloat)}}</td>
+                                            <td class="td w35">{{percent($value.o_rateFloat)}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_rateFloat', false)%>
+                                        </tr>
+                                        <tr class="tr tr-even">
+                                            <th class="th w15">保证金比例</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_bailRatio)}}</td>
+                                            <td class="td w35">{{percent($value.o_bailRatio)}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_bailRatio', false)%>
+                                        </tr>
+                                        <tr class="tr">
+                                            <th class="th w15">保证金</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_bailSum)}}</td>
+                                            <td class="td w35">{{$value.o_bailSum}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_bailSum', false)%>
+                                        </tr>
+                                        <tr class="tr tr-even">
+                                            <th class="th w15">手续费</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_pdgSum)}}</td>
+                                            <td class="td w35">{{$value.o_pdgSum}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_pdgSum', false)%>
+                                        </tr>
+                                        <tr class="tr">
+                                            <th class="th w15">主要担保方式</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_vouchTypeName)}}</td>
+                                            <td class="td w35">{{$value.o_vouchTypeName}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_vouchType', '$value.nlp_remark_vouchType')%>
+                                        </tr>
+                                        <tr class="tr tr-even">
+                                            <th class="th w15">用途</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_purpose)}}</td>
+                                            <td class="td w35">{{$value.o_purpose}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_purpose', '$value.nlp_remark_purpose')%>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{/each}}
+                    </script>
+                </div>
+            </div>
+        </div>
+        <div id="toTopBtn" class="icon-btn-to-top"></div>
+    </div>
+</body>
+</html>

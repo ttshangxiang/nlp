@@ -1,0 +1,49 @@
+{
+  "name": "nlp",
+  "private": true,
+  "version": "0.0.1",
+  "description": "nlp",
+  "main": "server.js",
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "NODE_ENV=dev supervisor -i node_modules,cfg,dist,src src ./server.js",
+    "dist": "npm run clean & webpack",
+    "build": "npm run dist",
+    "lint": "eslint ./src",
+    "copy": "copyfiles -u 1 ./src/lib/*.js ./src/*.html ./dist",
+    "clean": "rimraf dist/*"
+  },
+  "repository": "",
+  "keywords": [],
+  "author": "jhq",
+  "devDependencies": {
+    "copy-webpack-plugin": "^3.0.1",
+    "core-js": "^2.4.1",
+    "css-loader": "^0.23.0",
+    "ejs-loader": "^0.3.0",
+    "eslint": "^2.2.0",
+    "eslint-loader": "^1.0.0",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.8.4",
+    "html-webpack-plugin": "^2.22.0",
+    "less": "^2.7.3",
+    "less-loader": "v2.2.2",
+    "minimist": "^1.2.0",
+    "null-loader": "^0.1.1",
+    "open": "0.0.5",
+    "rimraf": "^2.4.3",
+    "style-loader": "^0.13.0",
+    "supervisor": "^0.12.0",
+    "url-loader": "^0.5.6",
+    "webpack": "^1.13.1",
+    "webpack-dev-middleware": "^1.12.0",
+    "webpack-hot-middleware": "^2.20.0"
+  },
+  "dependencies": {
+    "express": "^4.16.2",
+    "json2csv": "^3.11.5",
+    "lodash": "^4.17.4",
+    "mysql": "^2.15.0",
+    "pm2": "^2.7.2"
+  }
+}

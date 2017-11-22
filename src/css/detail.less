@@ -1,0 +1,296 @@
+
+@import "./base.less";
+@import "./icon.less";
+@import "./tree.less";
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.wrapper {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+#main {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: #f7f7f7;
+}
+
+#nanjing {
+    margin-bottom: 36px;
+    margin-top: 85px;
+    position: relative;
+    .card-wrap {
+        margin-top: 10px;
+        .title-tips {
+            font-size: 14px;
+            text-align: right;
+        }
+        .top-count {
+            font-size: 14px;
+            line-height: 20px;
+            margin-bottom: 5px;
+        }
+    }
+    .card {
+        border: 1px solid #e7e7e7;
+        background-color: #fff;
+        padding: 0 15px 16px;
+
+        .header {
+            margin-bottom: 16px;
+        }
+
+        .header-text {
+            font-size: 18px;
+            line-height: 48px;
+            color: #333;
+            border-bottom: 1px solid #e9e8e8;
+            font-weight: normal;
+        }
+
+        .content {
+            position: relative;
+        }
+    }
+    .detail-content {
+        float: left;
+        width: 750px;
+        margin-bottom: 16px;
+        position: relative;
+    }
+    
+    & > .card-wrap {
+        display: none;
+    }
+
+    .detail-loading {
+        height: 240px;
+        background-repeat: no-repeat;
+        background-position: center;
+        text-align: center;
+        span {
+            display: inline-block;
+            margin-top: 136px;
+            font-size: 12px;
+            color: #666;
+        }
+    }
+
+    .detail-loading {
+        display: none;
+        background-color: #fff;
+        border: 1px solid #e8e8e8;
+        margin-top: 10px;
+    }
+
+    .empty-main {
+        position: absolute;
+        height: 360px;
+        background-color: #fff;
+        border: 1px solid #e8e8e8;
+        text-align: center;
+        .wrapper {
+            padding-top: 74px;
+            img {
+                width: 150px;
+                height: 146px;
+                position: absolute;
+                left: 0;
+                right: 0;
+                margin: auto;
+            }
+            .main-tips {
+                margin-top: 25px;
+                font-size: 16px;
+                color: #999999;
+            }
+            .no-company-data {
+                margin: auto;
+            }
+        }
+    }
+
+    .empty-main {
+        display: none;
+    }
+
+    .customer-code {
+        font-size: 12px;
+        color: #666;
+        line-height: 18px;
+    }
+    
+    .customer-code-group {
+        padding-top: 0;
+    }
+
+    .card .header .header-text {
+        font-size: 18px;
+    }
+
+    .card .content .table-normal {
+        font-size: 12px;
+        color: #333;
+        overflow: auto;
+        border-collapse: collapse;
+        width: 100%;
+        tbody, thead {
+            th, td {
+                border: 1px solid #ddd;
+                padding: 6px 8px;
+                color: #666;
+            }
+
+        }
+    }
+    
+    .card .content .table-normal tbody .tr .td.differ {
+        color: #FF2400;
+        background: #fff600;
+    }
+
+    .card .content .table-normal tbody .tr .td.compare-td {
+        text-align: center;
+        position: relative;
+    }
+
+    .card .content .table-normal thead .tr .th {
+        text-align: center;
+        background-color: #f4f4f4;
+    }
+
+    .card .content .table-normal tbody .tr .th {
+        text-align: center;
+        background-color: #f4f4f4;
+    }
+    
+    .card .content .table-normal tbody .tr.tr-even {
+        background-color: #fbfdff;
+    }
+
+    .card.card-container {
+        width: auto;
+        border: none;
+        padding: 0;
+        background: none;
+    }
+
+    .sub-card {
+        border: 1px solid #e7e7e7;
+        background-color: #fff;
+        padding: 0 15px 16px;
+        margin-top: 10px;
+    }
+
+    .sub-title {
+        font-size: 14px;
+        color: #666;
+        line-height: 26px;
+        padding-top: 10px;
+    }
+
+    .text-box {
+        border: 1px solid #eee;
+        padding: 6px 8px;
+        font-size: 12px;
+        color: #666;
+        line-height: 20px;
+        background: #f4f4f4;
+        min-height: 40px;
+    }
+
+    .match-text {
+        background-color: #c9c9c9;
+        color: #000;
+    }
+
+    .helper {
+        position: absolute;
+        right: 4px;
+        top: 6px;
+        cursor: pointer;
+        &:hover .helper-text-wrap {
+            display: block;
+        }
+        .helper-text-wrap {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 0;
+            padding-right: 14px;
+            padding-top: 0;
+            z-index: 9;
+        }
+        .helper-text {
+            cursor: default;
+            background: #fff;
+            box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.16);
+            padding: 10px 12px;
+            width: 120px;
+            font-size: 12px;
+            line-height: 18px;
+            color: #666666;
+            text-align: left;
+
+            p {
+                margin: 0;
+                padding: 2px 0;
+            }
+        }
+    }
+}
+
+.nav {
+    background: #f7f7f7;
+    padding-top: 10px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    left: 0;
+    z-index: 998;
+    .sub-tags-wrap {
+        width: 998px;
+        margin: 0 auto;
+        background: #fff;
+        border: 1px solid #e7e7e7;
+
+        &.shadow {
+            box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.3)
+        }
+    }
+    .sub-tags {
+        margin: 18px 24px 12px;
+    }
+    .sub-tags-item {
+        display: inline-block;
+        font-size: 12px;
+        color: #666;
+        margin: 0 8px 8px 0;
+        padding: 3px 8px;
+        border: 1px solid #e7e7e7;
+        cursor: pointer;
+        text-decoration: none;
+
+        &.active {
+            color: #008cff;
+            border: 1px solid #008cff;
+        }
+    }
+}
+
+.icon-btn-to-top {
+    display: none;
+    position: fixed;
+    right: 0;
+    left: 1050px;
+    bottom: 20px;
+    margin: auto;
+    z-index: 99;
+    cursor: pointer;
+}

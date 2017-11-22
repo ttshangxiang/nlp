@@ -1,0 +1,76 @@
+#tree {
+    margin-left: -22px;
+    .tree-node {
+        position: relative;
+        padding-left: 22px;
+    }
+    .tree-children {
+        position: relative;
+    }
+    .tree-line {
+        position: absolute;
+        top: -9px;
+        bottom: -12px;
+        left: 8px;
+        border: 1px dotted #67b2dd;
+        border-width: 0 0 0 1px;
+        z-index: 1;
+    }
+    .tree-line-last {
+        position: absolute;
+        top: -9px;
+        bottom: 10px;
+        left: 8px;
+        border: 1px dotted #67b2dd;
+        border-width: 0 0 0 1px;
+        z-index: 1;
+    }
+    .tree-content {
+        line-height: 22px;
+        height: 22px;
+        position: relative;
+    }
+    .tree-line-v {
+        position: absolute;
+        top: 11px;
+        left: -13px;
+        width: 15px;
+        border: 1px dotted #67b2dd;
+        border-width: 1px 0 0 0;
+        z-index: 1;
+    }
+    .tree-expand {
+        width: 16px;
+        height: 16px;
+        position: absolute;
+        left: 0;
+        top: 3px;
+        z-index: 2;
+        background-color: #fff;
+    }
+    .tree-icon {
+        float: left;
+        margin-top: 3px;
+        margin-right: 3px;
+        position: relative;
+        z-index: 1;
+    }
+    .tree-text {
+        float: left;
+        font-size: 14px;
+        line-height: 20px;
+        color: #666;
+        text-decoration: none;
+        padding: 0 3px;
+        margin-left: -2px;
+
+        &:hover, &.active {
+            background: #eee;
+        }
+    }
+    .tree-fill {
+        float: left;
+        height: 22px;
+        width: 22px;
+    }
+}
