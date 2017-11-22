@@ -17,7 +17,7 @@ var chunks = Object.keys(entries);
 
 let config = {
     port: defaultSettings.port,
-    debug: true,
+    // debug: true,
     devtool: 'eval',
     output: {
         path: path.join(__dirname, '../'),
