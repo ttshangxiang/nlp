@@ -36,28 +36,29 @@ let config = {
     resolve: {
         extensions: ['', '.js'],
         alias: {
-            src: `${defaultSettings.srcPath}/`,
-            jquery: `${defaultSettings.srcPath}/lib/jquery.min.js`,
-            echarts: `${defaultSettings.srcPath}/lib/echarts.common.js`
+            src: `${defaultSettings.srcPath}/`
         }
     },
     externals: {
-        // jquery: 'window.$'
+        jquery: 'window.$',
+        artTemplate: 'window.template',
+        echarts: 'window.echarts'
     },
     module: {},
     plugins: [
-        new webpack.ProvidePlugin({ //载入jq,这样就不用每个里面都require了，直接使用  $
-            $: "jquery"
-        }),
     	new webpack.optimize.CommonsChunkPlugin({
             name: 'vendors', // 将公共模块提取，生成名为`vendors`的chunk
             chunks: chunks,
             minChunks: chunks.length // 提取所有entry共同依赖的模块
         }),
-        new ExtractTextPlugin('./css/[name]-[contenthash:8].css')
-        // new CopyWebpackPlugin([
-        //     { from: './src/lib', to: './dist/lib', toType: 'dir'}
-        // ])
+        new ExtractTextPlugin('./css/[name]-[contenthash:8].css'),
+        new CopyWebpackPlugin([{
+            // from: path.join(__dirname, '../src/lib'),
+            // to: path.join(__dirname, '../dist/lib'),
+            from: './src/lib',
+            to: './lib',
+            toType: 'dir'
+        }])
     ]
 };
 

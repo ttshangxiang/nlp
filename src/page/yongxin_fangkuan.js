@@ -1,7 +1,6 @@
 
 var $ = require('jquery');
 var echarts = require('echarts');
-require('../lib/echarts-wordcloud');
 
 var loading = '<div class="icon-loading-static-icon detail-loading"><span>加载中...</span></div>';
 var showError = function (str) {
