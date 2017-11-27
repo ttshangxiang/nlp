@@ -181,6 +181,7 @@ router.get('/uncleared', function (req, res, next) {
     var duebillID = req.query.duebillID;
     var contractId = req.query.contractId;
     var putoutID = req.query.putoutID;
+    var businessType = req.query.businessType;
 
     var offset = req.query.offset;
     var count = req.query.count;
@@ -197,6 +198,9 @@ router.get('/uncleared', function (req, res, next) {
     }
     if (putoutID) {
         whereArr.push('putoutID = "' + putoutID + '"');
+    }
+    if (businessType) {
+        whereArr.push('businessType = "' + businessType + '"');
     }
 
     var whereStr = ' where ';
@@ -343,15 +347,15 @@ router.get('/yongXinVSShouXin', function (req, res, next) {
     var selectSQL = `
         select sorgid, orgname, sum(unormal) as noStatistics, sum(normal) as yesStatistics from (
             select unormal, normal, case when orglevel = '6' then relativeorgid else operateOrgId end as sorgid from (
-                select operateOrgId, sum(value0) unormal, sum(value1), normal from (
-                    select lineid, operateOrgId, sum(case when a.approveSum > b.lineSum then 1 else 0) as value0,
-                    sum(case when a.approveSum <= b.lineSum then 1 else 0) as value1 from (
+                select operateOrgId, sum(value0) unormal, sum(value1) normal from (
+                    select lineid, operateOrgId, sum(case when a.approveSum > b.lineSum then 1 else 0 end) as value0,
+                    sum(case when a.approveSum <= b.lineSum then 1 else 0 end) as value1 from (
                         select lineid, oprateOrgId, sum(nlp_bizSum) as approveSum from nlp_unstrured_info
                         where nlp_identify = 'F' and approveId is not null group by lineid, operateOrgId
                     ) a,
                     (
-                        select lineid as lineApprovedId, operateOrgId as orgid, sum(nlp_bizSum) as lineSum from nlp_unstrured_info
-                        where nlp_identify in ('B', 'D') and approveId is not null
+                        select lineid as lineApproveId, operateOrgId as orgid, sum(nlp_bizSum) as lineSum from nlp_unstrured_info
+                        where nlp_identify in ('B', 'D') and approveId is not null group by lineid, operateOrgId
                     ) b where b.lineApproveId = a.lineid group by lineid, operateOrgId
                 ) c group by operateOrgId
             ) d, nlp_org_info e where e.orglevel in ('2','3','6') and orgid <> '11' and d.operateOrgId = e.orgid
@@ -396,8 +400,8 @@ router.get('/yongXinVSFangKuan', function (req, res, next) {
         select sorgid, orgname, sum(unormal) as noStatistics, sum(normal) as yesStatistics from (
             select unormal, normal, case when orglevel = '6' then relativeorgid else operateOrgId end as sorgid from (
                 select operateOrgId, sum(value0) unormal, sum(value1) normal from (
-                    select contractId, operateOrgId, sum(case when a.approveSum < b.balance then 1 else 0 end) as value 0,
-                    sum(calse when a.approveSum >= b.balance then 1 else 0 end) as value1 from (
+                    select contractId, operateOrgId, sum(case when a.approveSum < b.balance then 1 else 0 end) as value0,
+                    sum(case when a.approveSum >= b.balance then 1 else 0 end) as value1 from (
                         select contractId, operateOrgId, sum(nlp_bizSum) as approveSum from nlp_unstrured_info
                         where nlp_identify = 'F' and approveId is not null group by contractId, operateOrgId
                     ) a,
@@ -422,7 +426,7 @@ router.get('/yongXinVSFangKuanSub', function (req, res, next) {
         select orgid, orgname, sum(unormal) as noStatistics, sum(normal) as yearStatistics from (
             select operateOrgId, sum(value0) unormal, sum(value1) normal from (
                 select contractId, operateOrgId, sum(case when a.approveSum < b.balance then 1 else 0 end) as value0,
-                sum(case when a.approveSum >= b.balance then 1 else 0 end) as value 1 from (
+                sum(case when a.approveSum >= b.balance then 1 else 0 end) as value1 from (
                     select contractId, operateOrgId, sum(nlp_bizSum) as approveSum from nlp_unstrured_info
                     where nlp_identify = 'F' and approveId is not null group by contractId, operateOrgId
                 ) a,
@@ -567,5 +571,17 @@ function getYongxin2 (customerId, customerName) {
     });
     return p;
 }
+
+// 获取业务品种
+router.get('/businessType', function (req, res, next) {
+    var selectSQL = 'select distinct businessType, businessTypeName from nlp_uncleared_credit';
+    db.find(selectSQL, function (data) {
+        if (data === 'error') {
+            res.status(500).send({status: 500, msg: 'query database faild'});
+            return;
+        }
+        res.status(200).send({status: 0, data: data});
+    });
+});
 
 module.exports = router;

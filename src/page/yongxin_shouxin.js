@@ -146,7 +146,7 @@ var getData2 = function (suc, err) {
         cache: false,
         dataType: 'json',
         success: function (res) {
-            suc && suc();
+            suc && suc(res);
             if (res.status === 0) {
                 chart5 && chart5.dispose();
                 chart5 = renderCharts2('chart5', lineConvert(res.data));

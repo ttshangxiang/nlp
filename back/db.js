@@ -1,6 +1,6 @@
 
 var mysql = require('mysql');
-var config = require('../deploy_conf/config');
+var config = require('../deploy_conf/config').mysql;
 var pool = mysql.createPool(config);
 
 // var selectSQL = 'select * from danbao limit 10';

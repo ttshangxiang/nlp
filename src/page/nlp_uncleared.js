@@ -6,7 +6,7 @@ require('../css/pagination.less');
 
 var query = {
     page: 0,
-    count: 15,
+    count: 20,
     totalCount: 0
 };
 
@@ -37,13 +37,14 @@ var getParam = function () {
         offset: query.page * query.count,
         count: query.count
     };
-    $('#card-1 input').each(function () {
+    $('#card-1 input, #card-1 select').each(function () {
         var $el = $(this);
         var value = $el.val();
         if (value) {
             param[$el.attr('name')] = value
         }
     });
+
     return param;
 };
 
@@ -75,9 +76,32 @@ var getUnCleared = function () {
     });
 };
 
+var getBusinessType = function () {
+    $.ajax({
+        url: '/nanjing/businessType',
+        cache: false,
+        dataType: 'json',
+        success: function (res) {
+            if (res.status === 0) {
+                var list = res.data;
+                var str = '<option value="">全部</option>';
+                for (var i = 0; i < list.length; i++) {
+                    str += '<option value="' + list[i].businessType + '">' + list[i].businessTypeName + '</option>';
+                }
+                $('#businessType').html(str);
+            }
+        },
+        error: function () {
+        }
+    });
+};
+
 var loaded = false;
 var unClearedInit = function () {
-    !loaded && getUnCleared();
+    if (!loaded) {
+        getUnCleared();
+        getBusinessType();
+    }
 };
 
 module.exports = unClearedInit;
@@ -95,10 +119,27 @@ $(function () {
     });
 
     $('#nlp-uncleared-reset').click(function () {
-        $('#card-1 input').each(function () {
+        $('#card-1 input, #card-1 select').each(function () {
             $(this).val('');
         });
     });
 
+    $('#card-1 input, #card-1 select').change(function () {
+        var url = '/export/uncleared';
+        var query = '';
+        $('#card-1 input, #card-1 select').each(function () {
+            var $el = $(this);
+            var value = $el.val();
+            if (value) {
+                query += '&' + $el.attr('name') + '=' + value;
+            }
+        });
+        if (query) {
+            url += '?' + query.substr(1);
+        }
+        $('#export-uncleared').attr('href', url);
+    });
+
     getUnCleared();
+    getBusinessType();
 });

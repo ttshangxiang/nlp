@@ -84,7 +84,10 @@
                             <input type="text" name="duebillID">
                         </div>
                         <div class="input-box">
-                            <a href="/export/uncleared" target="_blank">导出</a>
+                            <label>业务品种：</label>
+                            <select name="businessType" id="businessType">
+                                <option value="">全部</option>
+                            </select>
                         </div>
                     </div>
                     <div class="filter-line clearfix">
@@ -97,6 +100,7 @@
                             <input type="text" name="putoutID">
                         </div>
                         <div class="input-box">
+                            <a href="/export/uncleared" id="export-uncleared" target="_blank">导出</a>
                             <a href="javascript:;" id="nlp-uncleared-reset">重置</a>
                             <a href="javascript:;" id="nlp-uncleared-query">查询</a>
                         </div>
@@ -112,6 +116,7 @@
                     <div class="nlp-table-wrap">
                         <table class="nlp-table" style="width: 1480px;">
                             <tr>
+                                <th style="width: 40px"></th>
                                 <th style="width: 250px;">客户名称</th>
                                 <th style="width: 150px;">借据流水号</th>
                                 <th style="width: 150px;">合同号</th>
@@ -127,6 +132,7 @@
                             <tbody>
                                 {{each data}}
                                 <tr>
+                                    <td>{{ $index + 1 }}</td>
                                     <td><a href="/detail.html?name={{encodeURIComponent($value.customerName)}}" target="_blank">{{ $value.customerName }}</a></td>
                                     <td>{{ $value.duebillID }}</td>
                                     <td>{{ $value.contractId }}</td>
@@ -157,6 +163,10 @@
                         <i class="icon-loading-static-icon"></i>
                         <span>加载中...</span>
                     </div>
+                    <!-- 总数 -->
+                    {{if total}}
+                    <div class="total-tips">共{{total}}条数据</div>
+                    {{/if}}
                     <!--只有一页,不显示-->
                     {{if total > pageSize}}
                     <div class="group-footer">
@@ -180,7 +190,7 @@
                             <input type="text" name="relativeId">
                         </div>
                         <div class="input-box">
-                            <a href="/export/group" target="_blank">导出</a>
+                            <!-- <a href="/export/group" target="_blank">导出</a> -->
                             <a href="javascript:;" id="nlp-group-reset">重置</a>
                             <a href="javascript:;" id="nlp-group-query">查询</a>
                         </div>
@@ -196,6 +206,7 @@
                     <div class="nlp-table-wrap">
                         <table class="nlp-table">
                             <tr>
+                                <th style="width: 40px"></th>
                                 <th></th>
                                 <th>集团编号</th>
                                 <th>集团名称</th>
@@ -204,6 +215,7 @@
                             </tr>
                             {{each data}}
                             <tr>
+                                <td>{{ $index + 1 }}</td>
                                 <td class="show-member" data-status="+" data-id="{{$value.relativeId}}"><a href="javascript:;">+</a></td>
                                 <td>{{$value.relativeId}}</td>
                                 <td>{{$value.groupName}}</td>
@@ -227,6 +239,10 @@
                         <i class="icon-loading-static-icon"></i>
                         <span>加载中...</span>
                     </div>
+                    <!-- 总数 -->
+                    {{if total}}
+                    <div class="total-tips">共{{total}}条数据</div>
+                    {{/if}}
                     <!--只有一页,不显示-->
                     {{if total > pageSize}}
                     <div class="group-footer">
@@ -240,6 +256,7 @@
                     {{each data}}
                     <tr class="member member-{{groupId}}">
                         <td></td>
+                        <td></td>
                         <td>{{$value.relativeId}}</td>
                         <td>{{$value.groupName}}</td>
                         <td>{{$value.customerId}}</td>
@@ -248,7 +265,7 @@
                     {{/each}}
                     {{if data.length === 0}}
                     <tr class="member-{{groupId}}">
-                        <td colspan="5">&emsp;暂无数据</td>
+                        <td colspan="6">&emsp;暂无数据</td>
                     </tr>
                     {{/if}}
                 </script>

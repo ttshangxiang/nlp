@@ -7,7 +7,7 @@ require('../css/pagination.less');
 
 var query = {
     page: 0,
-    count: 15,
+    count: 20,
     totalCount: 0
 };
 

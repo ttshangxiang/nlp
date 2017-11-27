@@ -75,7 +75,7 @@ body, html {
                 text-align: right;
                 display: inline-block;
             }
-            input {
+            input, select{
                 width: 144px;
                 padding: 0 8px;
                 border: 1px solid #E3E3E3;
@@ -83,6 +83,9 @@ body, html {
                 line-height: 24px;
                 height: 24px;
                 color: #333333;
+                &:focus {
+                    outline: none;
+                }
             }
 
             a {
@@ -237,5 +240,13 @@ body, html {
                 }
             }
         }
+    }
+
+    .total-tips {
+        position: absolute;
+        bottom: 10px;
+        font-size: 14px;
+        left: 24px;
+        color: #666;
     }
 }

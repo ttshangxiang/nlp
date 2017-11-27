@@ -7,7 +7,7 @@ if (module.hot) {
 require('../css/detail.less');
 var $ = require('jquery');
 var template = require('../lib/template');
-// require('../lib/mockjsTpl');
+require('../lib/mockjsTpl');
 
 // 解析数据
 template.helper('nlpData2', function (nlp) {
@@ -109,6 +109,7 @@ var companyid = window.location.href.split('name=')[1];
 if (companyid) {
     companyid = decodeURIComponent(companyid);
     document.title = companyid + ' - 信贷语义识别';
+    $('.company-name').text(companyid);
 }
 
 // 数据结构化
@@ -291,7 +292,7 @@ var loadData = function () {
             if (res.status === 0) {
                 var obj = dataConvert(res.data);
                 renderAll(obj);
-                console.log(obj.customerID);
+                setTimeout(fixPosition, 0);
                 if (obj.customerID) {
                     $('.empty-main').hide();
                     $('#nanjing > .card-wrap').show();
@@ -380,6 +381,15 @@ function scrollHeader() {
 scrollBar.scroll(function () {
     scrollHeader();
     !stopScrollEvent && scrollSelect();
+});
+
+var fixPosition = function () {
+    var $nav = $('.nav');
+    $nav.css('left', $('#nanjing').offset().left + 'px');
+};
+
+$(window).resize(function () {
+    fixPosition();
 });
 
 // 点击二级标签,使得滚动条滚动到目标卡片
