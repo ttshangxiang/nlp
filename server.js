@@ -5,7 +5,7 @@ var webpackDevMiddleware = require('webpack-dev-middleware');
 var webpackHotMiddleware = require('webpack-hot-middleware');
 var webpackDevConfig = require('./webpack.config');
 var baseConfig = require('./cfg/base');
-var auth = require('./back/auth');
+var auth = require('./back/auth').auth;
 
 var routes = require('./back/routes');
 var app = express();

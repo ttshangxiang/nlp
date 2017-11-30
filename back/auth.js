@@ -37,7 +37,7 @@ var auth = function (req, res, next) {
         if (info.code == 'SUCCESS') {
             userList[token] = { value: info.value, time: new Date().getTime() };
             res.cookie('nlp_access_token', token, {path: '/', httpOnly: true});
-            next();
+            res.redirect('/');
         } else {
             fail(req, res);
         }
@@ -48,17 +48,19 @@ var fail = function (req, res) {
     if (/\.html/.test(req.originalUrl) || req.path == '/') {
         res.redirect(config.loginUrl);
     } else {
-        res.status(403).send({status: 403, msg: 'timeout'});
+        res.status(403).send({status: 403, msg: 'Not Logged In'});
     }
 };
+
+var clear = function (u) {
+    userList[u].time = 0
+}
 
 var clearOutTime = function () {
     setInterval(function () {
         var time = new Date().getTime();
         for (var u in userList) {
-            if (u.time && time - u.time > delay) {
-                delete userList[u];
-            }
+            u.time && time - u.time > delay && delete userList[u];
         }
     }, 60000);
 };
@@ -68,4 +70,7 @@ clearOutTime();
 
 
 
-module.exports = auth;
+module.exports = {
+    auth: auth,
+    clear: clear
+};

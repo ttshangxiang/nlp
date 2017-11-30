@@ -462,7 +462,9 @@ router.get('/jiexi2', function (req, res, next) {
         Promise.all([
             getShouxin2(customerId, customerName),
             getShouxintiaozheng2(customerId, customerName),
-            getYongxin2(customerId, customerName)
+            getYongxin2(customerId, customerName),
+            getX(customerId, customerName),
+            getY(customerId, customerName)
         ]).then(function (values) {
             values.unshift(data);
             res.status(200).send({status: 0, data: values});
@@ -583,5 +585,63 @@ router.get('/businessType', function (req, res, next) {
         res.status(200).send({status: 0, data: data});
     });
 });
+
+// 获取用信vs放款
+function getX (customerId, customerName) {
+    var where = ' a.customerName = "' + customerName + '"';
+    if (customerId) {
+        where = ' a.customerID ="' + customerId + '"';
+    }
+    where += ' and a.nlp_identify = "X"';
+    var p = new Promise(function (resolve, reject) {
+        var selectSQL =
+        `select (select itemName from nlp_code_library where codeno = 'PayMode' and itemno = c.paymode) as l_paymode,
+        (select itemName from nlp_code_library where codeno = 'CorpusPayMethod' and itemno = c.corpuspaymethod) as l_corpuspaymethod
+        a.*, b.*, c.* from nlp_check_elements_info a,
+        (select * from nlp_unstrured_info where nlp_identify = 'F') b,
+        (select d.*, f.approveId, e.duebillID as e_duebillID, e.businessTypeName as e_businessTypeName, 
+        e.vouchTypeName as e_vouchTypeName, e.businessSum as e_businessSum, e.businessCurrencyName as e_businessCurrencyName
+        from nlp_biz_putout d, nlp_uncleared_credit e, nlp_unstrured_info f
+        where d.serialno = e.putoutID and e.contractId = f.contractId and f.nlp_identify = 'F') c
+        WHERE a.approveId = b.approveId and a.approveId = c.approveId and ${where}`;
+        db.find(selectSQL, function (data) {
+            if (data === 'error') {
+                resolve('query database faild');
+                return;
+            }
+            resolve(data);
+        });
+    });
+    return p;
+}
+
+// 获取用信vs授信
+function getY (customerId, customerName) {
+    var where = ' a.customerName = "' + customerName + '"';
+    if (customerId) {
+        where = ' a.customerID ="' + customerId + '"';
+    }
+    where += ' and a.nlp_identify = "Y"';
+    var p = new Promise(function (resolve, reject) {
+        var selectSQL =
+        `select c.lineId as c_lineId, c.nlp_businessTypeName as c_nlp_businessTypeName, c.phaseOpinion as c_phaseOpinion, c.nlp_businessSum as c_nlp_businessSum,
+        c.nlp_vouchTypeName as c_nlp_vouchTypeName, c.nlp_purpose as c_nlp_purpose, c.nlp_PhaseOpinion as c_nlp_PhaseOpinion, c.nlp_identify as c_nlp_identify,
+        b.approveId as b_approveId, b.nlp_businessTypeName as b_nlp_businessTypeName, b.phaseOpinion as b_phaseOpinion, b.nlp_businessSum as b_nlp_businessSum,
+        b.nlp_vouchTypeName as b_nlp_vouchTypeName, b.nlp_purpose as b_nlp_purpose, b.nlp_PhaseOpinion as b_nlp_PhaseOpinion,
+        c.nlp_rateFloat as c_nlp_rateFloat, b.nlp_rateFloat as b_nlp_rateFloat,
+        a.* from nlp_check_elements_info a,
+        (select * from nlp_unstrured_info where nlp_identify = 'F') b,
+        (select * from nlp_unstrured_info where nlp_identify in ('B', 'D')) c 
+        WHERE a.lineId = b.lineId and a.lineId = c.lineId and ${where}`;
+        db.find(selectSQL, function (data) {
+            if (data === 'error') {
+                resolve('query database faild');
+                return;
+            }
+            resolve(data);
+        });
+    });
+    return p;
+}
 
 module.exports = router;

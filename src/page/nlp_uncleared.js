@@ -63,6 +63,13 @@ var getUnCleared = function () {
                 query.totalCount = res.data['total_count'];
                 renderPage(res.data.data, query.totalCount);
                 // 分页
+                if (res.data.data[0]) {
+                    var patchdate = res.data.data[0].patchdate;
+                    if (patchdate.length == 8) {
+                        patchdate = patchdate.substr(0, 4) + '年' + patchdate.substr(4, 2) + '月', + patchdate(6) + '日';
+                    }
+                    $('#patchdate').html('(数据日期：' + patchdate + ')');
+                }
                 pageInit();
             } else {
                 renderPage([], 0, res.msg || '加载失败');

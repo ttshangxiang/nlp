@@ -19,6 +19,14 @@
                             <span class="sub-tag-name">目录</span>
                             <span class="sub-tag-num"></span>
                         </a>
+                        <a href="javascript:;" class="sub-tags-item" id="nanjingY_url" data-target="nanjingY">
+                            <span class="sub-tag-name">授信与用信核对</span>
+                            <span class="sub-tag-num"></span>
+                        </a>
+                        <a href="javascript:;" class="sub-tags-item" id="nanjingX_url" data-target="nanjingX">
+                            <span class="sub-tag-name">用信与放款核对</span>
+                            <span class="sub-tag-num"></span>
+                        </a>
                         <a href="javascript:;" class="sub-tags-item" id="nanjing1_url" data-target="nanjing1">
                             <span class="sub-tag-name">评级</span>
                             <span class="sub-tag-num"></span>
@@ -60,6 +68,184 @@
                             <div id="tree"></div>
                         </div>
                     </div>
+                </div>
+                <div class="card-wrap">
+                    <div class="card card-container" id="nanjingY"></div>
+                    <script type="text/html" id="nanjingY-tpl">
+                        {{each list}}
+                        {{if !$value.empty}}
+                        <div class="sub-card" id="{{$value._id}}">
+                            <div class="header">
+                                <h3 class="header-text">
+                                {{$value.title}}
+                                </h3>
+                            </div>
+                            <div class="customer-code-group">
+                                <div class="customer-code">额度编号: {{$value.c_lineId}}</div>
+                                <div class="customer-code">用信编号: {{$value.b_approveId}}</div>
+                            </div>
+                            <div class="sub-title">授信意见</div>
+                            <div class="text-box">
+                                {{#$value.c_phaseOpinion}}
+                            </div>
+                            <div class="sub-title">用信意见</div>
+                            <div class="text-box">
+                                {{#$value.b_phaseOpinion}}
+                            </div>
+                            <div class="sub-title">授信与用信核对</div>
+                            <div class="content">
+                                <table class="table table-normal">
+                                    <thead class="thead">
+                                        <tr class="tr">
+                                            <th class="th w15">业务要素</th>
+                                            <th class="th w35">授信</th>
+                                            <th class="th w35">用信</th>
+                                            <th class="th w15">是否一致</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="tr tr-even">
+                                            <th class="th w15">业务品种</th>
+                                            <td class="td w35">{{nlpData2($value.c_nlp_businessTypeName)}}</td>
+                                            <td class="td w35">{{nlpData2($value.b_nlp_businessTypeName)}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_bizType', false)%>
+                                        </tr>
+                                        <tr class="tr">
+                                            <th class="th w15">申请金额</th>
+                                            <td class="td w35">{{nlpData2($value.c_nlp_businessSum)}}</td>
+                                            <td class="td w35">{{nlpData2($value.b_nlp_businessSum)}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_bizSum', false)%>
+                                        </tr>
+                                        <tr class="tr">
+                                            <th class="th w15">主要担保方式</th>
+                                            <td class="td w35">{{nlpData2($value.c_nlp_vouchTypeName)}}</td>
+                                            <td class="td w35">{{nlpData2($value.b_nlp_vouchTypeName)}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_vouchType', '$value.nlp_remark_vouchType')%>
+                                        </tr>
+                                        <tr class="tr tr-even">
+                                            <th class="th w15">用途</th>
+                                            <td class="td w35">{{nlpData2($value.c_nlp_purpose)}}</td>
+                                            <td class="td w35">{{nlpData2($value.b_nlp_purpose)}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_purpose', '$value.nlp_remark_purpose')%>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{/each}}
+                    </script>
+                </div>
+                <div class="card-wrap">
+                    <div class="card card-container" id="nanjingX"></div>
+                    <script type="text/html" id="nanjingX-tpl">
+                        {{each list}}
+                        {{if !$value.empty}}
+                        <div class="sub-card" id="{{$value._id}}">
+                            <div class="header">
+                                <h3 class="header-text">
+                                {{$value.title}}
+                                </h3>
+                            </div>
+                            <div class="customer-code-group">
+                                <div class="customer-code">借据号: {{$value.e_duebillID}}</div>
+                                <div class="customer-code">用信编号: {{$value.approveId}}</div>
+                            </div>
+                            <div class="sub-title">用信意见</div>
+                            <div class="text-box">
+                                {{#$value.phaseOpinion}}
+                            </div>
+                            <div class="sub-title">NLP解析结果</div>
+                            <div class="content">
+                                <table class="table table-normal">
+                                    <thead class="thead">
+                                        <tr class="tr">
+                                            <th class="th w15">业务要素</th>
+                                            <th class="th w35">用信</th>
+                                            <th class="th w35">放款</th>
+                                            <th class="th w15">是否一致</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="tr tr-even">
+                                            <th class="th w15">业务品种</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_businessTypeName)}}</td>
+                                            <td class="td w35">{{$value.e_businessTypeName}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_bizType', false)%>
+                                        </tr>
+                                        <tr class="tr">
+                                            <th class="th w15">申请金额</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_businessSum)}}</td>
+                                            <td class="td w35">{{$value.e_businessSum}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_bizSum', false)%>
+                                        </tr>
+                                        <tr class="tr tr-even">
+                                            <th class="th w15">币种</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_businessCurrencyName)}}</td>
+                                            <td class="td w35">{{$value.e_businessCurrencyName}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_bizCurrency', false)%>
+                                        </tr>
+                                        <tr class="tr tr-even">
+                                            <th class="th w15">还款方式</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_corpuspayMethodName)}}</td>
+                                            <td class="td w35">{{$value.l_corpuspaymethod}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_corpMet', '$value.nlp_remark_corpMet')%>
+                                        </tr>
+                                        <tr class="tr">
+                                            <th class="th w15">支付方式</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_payModeName)}}</td>
+                                            <td class="td w35">{{$value.l_paymode}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_payMode', false)%>
+                                        </tr>
+                                        <tr class="tr tr-even">
+                                            <th class="th w15">利率</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_businessRate)}}</td>
+                                            <td class="td w35">{{$value.BUSINESSRATE}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_bizRate', false)%>
+                                        </tr>
+                                        <tr class="tr">
+                                            <th class="th w15">利率浮动比例</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_rateFloat)}}</td>
+                                            <td class="td w35">{{$value.RATEFLOAT}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_rateFloat', false)%>
+                                        </tr>
+                                        <tr class="tr tr-even">
+                                            <th class="th w15">保证金比例</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_bailRatio)}}</td>
+                                            <td class="td w35">{{$value.BAILRATIO}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_bailRatio', false)%>
+                                        </tr>
+                                        <tr class="tr">
+                                            <th class="th w15">保证金</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_bailSum)}}</td>
+                                            <td class="td w35">{{$value.CONTRACTSUM}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_bailSum', false)%>
+                                        </tr>
+                                        <tr class="tr tr-even">
+                                            <th class="th w15">手续费</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_pdgSum)}}</td>
+                                            <td class="td w35">{{$value.PDGSUM}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_pdgSum', false)%>
+                                        </tr>
+                                        <tr class="tr">
+                                            <th class="th w15">主要担保方式</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_vouchTypeName)}}</td>
+                                            <td class="td w35">{{$value.e_vouchTypeName}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_vouchType', '$value.nlp_remark_vouchType')%>
+                                        </tr>
+                                        <tr class="tr tr-even">
+                                            <th class="th w15">用途</th>
+                                            <td class="td w35">{{nlpData2($value.nlp_purpose)}}</td>
+                                            <td class="td w35">{{$value.PURPOSE}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_purpose', '$value.nlp_remark_purpose')%>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{/each}}
+                    </script>
                 </div>
                 <div class="card-wrap">
                     <div class="card" id="nanjing1"></div>
@@ -112,7 +298,6 @@
                         {{/if}}
                     </script>
                 </div>
-            
                 <div class="card-wrap">
                     <div class="card card-container" id="nanjing2"></div>
                     <script type="text/html" id="nanjing2-tpl">
@@ -176,7 +361,6 @@
                         {{/each}}
                     </script>
                 </div>
-            
                 <div class="card-wrap">
                     <div class="card card-container" id="nanjing3"></div>
                     <script type="text/html" id="nanjing3-tpl">
@@ -239,7 +423,6 @@
                         {{/each}}
                     </script>
                 </div>
-            
                 <div class="card-wrap">
                     <div class="card card-container" id="nanjing4"></div>
                     <script type="text/html" id="nanjing4-tpl">
