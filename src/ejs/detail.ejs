@@ -47,7 +47,7 @@
                 </div>
             </div>
         </div>
-        <% var diffTpl2 = require('../public/util').diffTpl2 %>
+        <% var diffTpl2 = require('../public/ejs-filters').diffTpl2 %>
         <div class="center wrapper">
             <div id="nanjing">
                 <div class="icon-loading-static-icon detail-loading"><span>加载中...</span></div>
@@ -200,26 +200,20 @@
                                         <tr class="tr tr-even">
                                             <th class="th w15">利率</th>
                                             <td class="td w35">{{nlpData2($value.nlp_businessRate)}}</td>
-                                            <td class="td w35">{{$value.BUSINESSRATE}}</td>
+                                            <td class="td w35">{{percent($value.BUSINESSRATE)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bizRate', false)%>
                                         </tr>
                                         <tr class="tr">
                                             <th class="th w15">利率浮动比例</th>
                                             <td class="td w35">{{nlpData2($value.nlp_rateFloat)}}</td>
-                                            <td class="td w35">{{$value.RATEFLOAT}}</td>
+                                            <td class="td w35">{{percent($value.RATEFLOAT)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_rateFloat', false)%>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w15">保证金比例</th>
                                             <td class="td w35">{{nlpData2($value.nlp_bailRatio)}}</td>
-                                            <td class="td w35">{{$value.BAILRATIO}}</td>
+                                            <td class="td w35">{{percent($value.BAILRATIO)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bailRatio', false)%>
-                                        </tr>
-                                        <tr class="tr">
-                                            <th class="th w15">保证金</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_bailSum)}}</td>
-                                            <td class="td w35">{{$value.CONTRACTSUM}}</td>
-                                            <%=diffTpl2('$value.nlp_compare_bailSum', false)%>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w15">手续费</th>
@@ -493,7 +487,7 @@
                                         <tr class="tr tr-even">
                                             <th class="th w15">利率</th>
                                             <td class="td w35">{{nlpData2($value.nlp_businessRate)}}</td>
-                                            <td class="td w35">{{$value.o_businessRate ? ($value.o_businessRate + '%') : ''}}</td>
+                                            <td class="td w35">{{percent($value.o_businessRate)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bizRate', false)%>
                                         </tr>
                                         <tr class="tr">

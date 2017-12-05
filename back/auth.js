@@ -6,50 +6,64 @@ var config = require('../deploy_conf/config')
 var userList = {};
 var delay = 30 * 60 * 1000;
 
-var auth = function (req, res, next) {
+var checkAuth = function (req) {
     // 带有效cookie
     var obj = null;
+    var access_token = null;
     if (req.cookies && req.cookies.nlp_access_token) {
-        var access_token = req.cookies.nlp_access_token;
-        var obj = userList[access_token]
+        access_token = req.cookies.nlp_access_token;
+        obj = userList[access_token];
     }
     if (obj) {
         if (new Date().getTime - obj.time < delay) {
-            next();
-            return;
+            return true;
         } else {
             delete userList[access_token];
         }
     }
-    // 带authToken
-    var token = req.query.authToken;
-    if (!token) {
-        fail(req, res);
+    return false;
+};
+
+var auth = function (req, res, next) {
+    if (checkAuth(req)) {
+        next();
         return;
     }
-    var url = config.checkUrl + token;
-    request(url, function (error, response, body) {
-        if (error || response.statusCode != 200) {
+    if (req.path == '/' || /\/.*\.html/.test(req.path)) {
+        // 带authToken
+        var token = req.query.authToken || req.cookies.nlp_access_token;
+        if (!token) {
             fail(req, res);
             return;
         }
-        var info = JSON.parse(body);
-        if (info.code == 'SUCCESS') {
-            userList[token] = { value: info.value, time: new Date().getTime() };
-            res.cookie('nlp_access_token', token, {path: '/', httpOnly: true});
-            res.redirect('/');
-        } else {
-            fail(req, res);
-        }
-    });
+        var url = config.checkUrl + token;
+        request(url, function (error, response, body) {
+            if (error || response.statusCode != 200) {
+                fail(req, res);
+                return;
+            }
+            var info = JSON.parse(body);
+            if (info.code == 'SUCCESS') {
+                userList[token] = { value: info.value, time: new Date().getTime() };
+                res.cookie('nlp_access_token', token, {path: '/', httpOnly: true});
+                if (req.path == '/') {
+                    res.redirect('/');
+                } else {
+                    next();
+                }
+            } else {
+                fail(req, res);
+            }
+        });
+    } else if (/\/api\//.test(req.path)) {
+        res.status(403).send({status: 403, msg: 'Not Logged In'});
+    } else {
+        next();
+    }
 };
 
 var fail = function (req, res) {
-    if (/\.html/.test(req.originalUrl) || req.path == '/') {
-        res.redirect(config.loginUrl);
-    } else {
-        res.status(403).send({status: 403, msg: 'Not Logged In'});
-    }
+    res.redirect(config.loginUrl);
 };
 
 var clear = function (u) {

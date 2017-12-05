@@ -1,6 +1,7 @@
 
 var $ = require('jquery');
 var echarts = require('echarts');
+var util = require('../public/util');
 
 var loading = '<div class="icon-loading-static-icon detail-loading"><span>加载中...</span></div>';
 var showError = function (str) {
@@ -21,7 +22,7 @@ var renderPies = function (id, data) {
     var chart = echarts.init(document.getElementById(id));
     var option = {
         title : {
-            text: '标题',
+            text: '累计用信金额超授信金额不良占比',
             x:'center'
         },
         tooltip : {
@@ -35,7 +36,7 @@ var renderPies = function (id, data) {
         },
         series : [
             {
-                name: '访问来源',
+                name: '数量',
                 type: 'pie',
                 radius : '55%',
                 center: ['50%', '60%'],
@@ -58,7 +59,7 @@ var renderCharts2 = function (id, data, title) {
     var myChart = echarts.init(document.getElementById(id));
     var option = {
         title: {
-            text: title || '标题',
+            text: title || '各机构累计用信金额超授信金额笔数',
             x:'center'
         },
         color: ['#3398DB'],
@@ -141,8 +142,8 @@ var lineConvert = function (list) {
 var getData2 = function (suc, err) {
     $('#chart5').html(loading);
     $('#chart5-back').hide();
-    $.ajax({
-        url: '/nanjing/yongXinVSShouXin',
+    util.ajax({
+        url: '/api/nanjing/yongXinVSShouXin',
         cache: false,
         dataType: 'json',
         success: function (res) {
@@ -165,8 +166,8 @@ var getData2 = function (suc, err) {
 var getData3 = function (params) {
     $('#chart5').html(loading);
     $('#chart5-back').show();
-    $.ajax({
-        url: '/nanjing/yongXinVSShouXinSub?orgId=' + params.data.sorgid,
+    util.ajax({
+        url: '/api/nanjing/yongXinVSShouXinSub?orgId=' + params.data.sorgid,
         cache: false,
         dataType: 'json',
         success: function (res) {

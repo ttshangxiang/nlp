@@ -6,6 +6,7 @@ var webpackHotMiddleware = require('webpack-hot-middleware');
 var webpackDevConfig = require('./webpack.config');
 var baseConfig = require('./cfg/base');
 var auth = require('./back/auth').auth;
+var logout = require('./back/logout');
 
 var routes = require('./back/routes');
 var app = express();
@@ -26,8 +27,9 @@ if (process.env.NODE_ENV === 'dev') {
     port = baseConfig.devServer.port;
 }
 
-app.use('/', routes);
 app.use(express.static(path.join(__dirname, 'dist')));
+app.get('/logout', logout);
+app.use('/api', routes);
 
 var server = app.listen(port, function () {
     var host = server.address().address;

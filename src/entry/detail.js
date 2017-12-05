@@ -7,23 +7,31 @@ if (module.hot) {
 require('../css/detail.less');
 var $ = require('jquery');
 var template = require('../lib/template');
-require('../lib/mockjsTpl');
+var util = require('../public/util')
+// require('../lib/mockjsTpl');
 
 // 解析数据
 template.helper('nlpData2', function (nlp) {
+    nlp = nlp || '';
     var defaultStr = '无解析数据';
     if (!nlp || nlp === 'Null') {
         return defaultStr;
     }
-    return nlp;
+    return nlp.replace('&&', ',');
 });
 
 // 百分比
 template.helper('percent', function (str) {
-    if (str || str === 0) {
+    str = str || '';
+    str = str + '';
+    str = str.replace('%', '');
+    if (!str || str == '0') {
         return str + '%';
     }
-    return '';
+    if (isNaN(parseFloat(str))) {
+        return str;
+    }
+    return str + '%';
 });
 
 // 渲染树
@@ -58,7 +66,7 @@ var renderTree = function (data, node) {
         }
         str += expand
             + fillStr
-            + '<a href="javascript:;" class="tree-text" data-id="' + data._id + '">'
+            + '<a href="javascript:;" class="tree-text" data-id="' + data._id + '" id="' + data._id +'-catalog">'
             + iconStr
             + '<span>' + data.text + '</span>'
             + '</a>'
@@ -139,18 +147,23 @@ var dataConvert = function (data) {
     var Y = obj.Y;
     if (!shouxin[0] || shouxin[0].empty) {
         shouxin = false;
+        $('#nanjing2_url').addClass('disable');
     }
     if (!tiaozheng[0] || tiaozheng[0].empty) {
         tiaozheng = false;
+        $('#nanjing3_url').addClass('disable');
     }
     if (!yongxin[0] || yongxin[0].empty) {
         yongxin = false;
+        $('#nanjing4_url').addClass('disable');
     }
     if (!X[0] || X[0].empty) {
         X = false;
+        $('#nanjingX_url').addClass('disable');
     }
     if (!Y[0] || Y[0].empty) {
         Y = false;
+        $('#nanjingY_url').addClass('disable');
     }
     obj.customerID = '';
     if (obj.pingji[0] && !obj.customerID) {
@@ -217,6 +230,7 @@ var diffPingji = function (list) {
     obj.title = '评级';
     if (obj.empty) {
         obj.text = '评级(无数据)';
+        $('#nanjing1_url').addClass('disable');
     }
     obj.o_phaseOpinion = addColor(obj.o_nlpPhaseOpinion, obj.o_phaseOpinion);
     return list;
@@ -232,7 +246,7 @@ var diffShouxin = function (list) {
         obj._id = 'shouxin_' + i;
         obj.text = obj.o_businessTypeName || ('授信' + (i + 1));
         obj.title = '授信' + (i + 1) + '-' + (obj.o_businessTypeName || '');
-        totalMoney += obj.nlp_bizSum;
+        totalMoney += parseFloat(obj.nlp_bizSum) || 0;
         obj.o_term = (obj.o_termMonth ? (obj.o_termMonth + '个月') : '') + (obj.o_termDay ? (obj.o_termDay + '天') : '');
         try {
             var arr = JSON.parse(obj.o_nlpPhaseOpinion);
@@ -282,7 +296,7 @@ var diffYongxin = function (list) {
         obj.text = obj.o_businessTypeName || ('用信' + (i + 1));
         obj.title = '用信' + (i + 1) + '-' + (obj.o_businessTypeName || '');
         obj.o_term = (obj.o_termMonth ? (obj.o_termMonth + '个月') : '') + (obj.o_termDay ? (obj.o_termDay + '天') : '');
-        totalMoney += obj.nlp_bizSum;
+        totalMoney += parseFloat(obj.nlp_bizSum) || 0;
         try {
             var arr = JSON.parse(obj.o_nlpPhaseOpinion);
             obj.json = {};
@@ -305,6 +319,10 @@ var diffX = function (list) {
         var obj = list[i];
         obj.json = {};
         obj._id = 'X_' + i;
+        if (!obj.nlp_businessTypeName || obj.nlp_businessTypeName == 'Null') {
+            obj.nlp_businessTypeName = '';
+        }
+        obj.nlp_businessTypeName = obj.nlp_businessTypeName.replace('&&', ',');
         obj.text = obj.nlp_businessTypeName || ('用信与放款核对' + (i + 1));
         obj.title = '用信与放款核对' + (i + 1) + '-' + (obj.nlp_businessTypeName || '');
         try {
@@ -327,6 +345,14 @@ var diffY = function (list) {
         var obj = list[i];
         obj.json = {};
         obj._id = 'Y_' + i;
+        if (!obj.b_nlp_businessTypeName || obj.b_nlp_businessTypeName == 'Null') {
+            obj.b_nlp_businessTypeName = '';
+        }
+        obj.b_nlp_businessTypeName = obj.b_nlp_businessTypeName.replace('&&', ',');
+        if (!obj.c_nlp_businessTypeName || obj.c_nlp_businessTypeName == 'Null') {
+            obj.c_nlp_businessTypeName = '';
+        }
+        obj.c_nlp_businessTypeName = obj.c_nlp_businessTypeName.replace('&&', ',');
         obj.text = obj.b_nlp_businessTypeName || ('用信与授信核对' + (i + 1));
         obj.title = '用信与授信核对' + (i + 1) + '-' + (obj.b_nlp_businessTypeName || '');
         try {
@@ -376,11 +402,21 @@ var addColor = function (json, text) {
     return text;
 };
 
+var setCount = function () {
+    $('.sub-card').each(function () {
+        var $this = $(this);
+        var differ = $this.find('.compare-td.differ').length;
+        var correct = $this.find('.compare-td.correct').length;
+        var id = $this.attr('id');
+        $('#' + id + '-catalog').append('<span>(' + differ + '/' + (correct + differ) + ')</span>');
+    });
+};
+
 // 拉取数据
 var loadData = function () {
     $('.detail-loading').show();
-    $.ajax({
-        url: '/nanjing/jiexi2?company=' + companyid,
+    util.ajax({
+        url: '/api/nanjing/jiexi2?company=' + companyid,
         cache: false,
         dataType: 'json',
         success: function (res) {
@@ -388,7 +424,10 @@ var loadData = function () {
             if (res.status === 0) {
                 var obj = dataConvert(res.data);
                 renderAll(obj);
-                setTimeout(fixPosition, 0);
+                setTimeout(function () {
+                    fixPosition();
+                    setCount();
+                }, 0);
                 if (obj.customerID) {
                     $('.empty-main').hide();
                     $('#nanjing > .card-wrap').show();
@@ -399,7 +438,7 @@ var loadData = function () {
             } else {
                 $('.empty-main').show();
             }
-        }, 
+        },
         error: function (err) {
             $('.detail-loading').hide();
             $('.empty-main').show();
@@ -442,7 +481,7 @@ function clickScroll(type, noAnimate) {
     tag.siblings('.active').removeClass('active');
     tag.addClass('active');
     var targetDom = $('#' + type);
-    if (!targetDom.length) {
+    if (!targetDom.length || targetDom.height() === 0) {
         return;
     }
     var top = targetDom.position().top + top0;
@@ -514,7 +553,7 @@ $('#tree').on('click', '.tree-text', function () {
     $this.addClass('active');
     var id = $this.attr('data-id');
     var $card = $('#' + id);
-    if ($card.length === 0) {
+    if ($card.length === 0 || $card.height() === 0) {
         return;
     }
     var top = $card.position().top + top0;

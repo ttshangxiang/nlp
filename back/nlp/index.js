@@ -365,7 +365,7 @@ router.get('/yongXinVSShouXin', function (req, res, next) {
             res.status(500).send('query database faild');
             return;
         }
-        res.status(200).send({status: 0, data: data});
+        res.status(200).send({status: 0, data: _.orderBy(data, 'noStatistics', 'desc')});
     });
 });
 router.get('/yongXinVSShouXinSub', function (req, res, next) {
@@ -390,7 +390,7 @@ router.get('/yongXinVSShouXinSub', function (req, res, next) {
             res.status(500).send('query database faild');
             return;
         }
-        res.status(200).send({status: 0, data: data});
+        res.status(200).send({status: 0, data: _.orderBy(data, 'noStatistics', 'desc')});
     });
 });
 
@@ -417,7 +417,7 @@ router.get('/yongXinVSFangKuan', function (req, res, next) {
             res.status(500).send('query database faild');
             return;
         }
-        res.status(200).send({status: 0, data: data});
+        res.status(200).send({status: 0, data: _.orderBy(data, 'noStatistics', 'desc')});
     });
 });
 router.get('/yongXinVSFangKuanSub', function (req, res, next) {
@@ -442,7 +442,7 @@ router.get('/yongXinVSFangKuanSub', function (req, res, next) {
             res.status(500).send('query database faild');
             return;
         }
-        res.status(200).send({status: 0, data: data});
+        res.status(200).send({status: 0, data: _.orderBy(data, 'noStatistics', 'desc')});
     });
 });
 
@@ -557,7 +557,7 @@ function getYongxin2 (customerId, customerName) {
         var selectSQL =
         `select c.approveId as o_approveId, c.pLineID as o_pLineID, c.contractId as o_contractId,c.businessTypeName as o_businessTypeName,
         c.businessSum as o_businessSum, c.businessCurrencyName as o_businessCurrencyName, c.termDay as o_termDay, c.termMonth as o_termMonth, 
-        c.corpuspayMethod as o_corpuspayMethod, c.payModeName as o_payModeName, c.businessRate as o_businessRate, c.rateFloat as o_rateFloat,
+        c.corpuspayMethodName as o_corpuspayMethodName, c.payModeName as o_payModeName, c.businessRate as o_businessRate, c.rateFloat as o_rateFloat,
         c.bailRatio as o_bailRatio, c.bailSum as o_bailSum, c.pdgSum as o_pdgSum, c.vouchTypeName as o_vouchTypeName, c.purpose as o_purpose,
         a.nlp_phaseOpinion as o_nlpPhaseOpinion, a.phaseOpinion as o_phaseOpinion, c.customerID as o_customerID, a.*, b.* from nlp_unstrured_info a
         LEFT JOIN nlp_check_elements_info b ON a.approveId = b.approveId

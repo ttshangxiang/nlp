@@ -1,6 +1,7 @@
 
 var $ = require('jquery');
 var template = require('../lib/template');
+var util = require('../public/util');
 
 require('../lib/Mricode-Pagination/mricode.pagination.js');
 require('../css/pagination.less');
@@ -53,8 +54,8 @@ var getGroup = function () {
     var param = getParam();
     $('#card-2 .empty-main').hide();
     $('#card-2 .detail-loading').show();
-    $.ajax({
-        url: '/nanjing/group',
+    util.ajax({
+        url: '/api/nanjing/group',
         data: param,
         cache: false,
         dataType: 'json',
@@ -106,8 +107,8 @@ var getMember = function (id, callback) {
         callback(memberCache[id]);
         return;
     }
-    $.ajax({
-        url: '/nanjing/member?id=' + id,
+    util.ajax({
+        url: '/api/nanjing/member?id=' + id,
         cache: false,
         dataType: 'json',
         success: function (res) {

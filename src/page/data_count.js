@@ -1,6 +1,7 @@
     
 var $ = require('jquery');
 var echarts = require('echarts');
+var util = require('../public/util');
 
 var loading = '<div class="icon-loading-static-icon detail-loading"><span>加载中...</span></div>';
 var showError = function (str) {
@@ -159,8 +160,8 @@ var renderWordCloud = function (data) {
 
 var getAttentionTop10 = function (type) {
     $('#chart1').html(loading);
-    $.ajax({
-        url: '/nanjing/attentionTop10?type=' + type,
+    util.ajax({
+        url: '/api/nanjing/attentionTop10?type=' + type,
         cache: false,
         dataType: 'json',
         success: function (res) {
@@ -179,8 +180,8 @@ var getAttentionTop10 = function (type) {
 
 var getAttention = function (type) {
     $('#chart3').html(loading);
-    $.ajax({
-        url: '/nanjing/attention?type=' + type,
+    util.ajax({
+        url: '/api/nanjing/attention?type=' + type,
         cache: false,
         dataType: 'json',
         success: function (res) {
@@ -203,8 +204,8 @@ var getAttention = function (type) {
 
 var getClass = function (type) {
     $('#chart2').html(loading);
-    $.ajax({
-        url: '/nanjing/class?type=' + type,
+    util.ajax({
+        url: '/api/nanjing/class?type=' + type,
         cache: false,
         dataType: 'json',
         success: function (res) {

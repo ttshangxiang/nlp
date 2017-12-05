@@ -3,6 +3,7 @@ var $ = require('jquery');
 var template = require('../lib/template');
 require('../lib/Mricode-Pagination/mricode.pagination.js');
 require('../css/pagination.less');
+var util = require('../public/util');
 
 var query = {
     page: 0,
@@ -53,8 +54,8 @@ var getUnCleared = function () {
     var param = getParam();
     $('#card-1 .empty-main').hide();
     $('#card-1 .detail-loading').show();
-    $.ajax({
-        url: '/nanjing/uncleared',
+    util.ajax({
+        url: '/api/nanjing/uncleared',
         data: param,
         cache: false,
         dataType: 'json',
@@ -84,8 +85,8 @@ var getUnCleared = function () {
 };
 
 var getBusinessType = function () {
-    $.ajax({
-        url: '/nanjing/businessType',
+    util.ajax({
+        url: '/api/nanjing/businessType',
         cache: false,
         dataType: 'json',
         success: function (res) {
@@ -132,7 +133,7 @@ $(function () {
     });
 
     $('#card-1 input, #card-1 select').change(function () {
-        var url = '/export/uncleared';
+        var url = '/api/export/uncleared';
         var query = '';
         $('#card-1 input, #card-1 select').each(function () {
             var $el = $(this);
