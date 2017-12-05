@@ -106,26 +106,26 @@
                                     <tbody>
                                         <tr class="tr tr-even">
                                             <th class="th w15">业务品种</th>
-                                            <td class="td w35">{{nlpData2($value.c_nlp_businessTypeName)}}</td>
-                                            <td class="td w35">{{nlpData2($value.b_nlp_businessTypeName)}}</td>
+                                            <td class="td w35">{{#nlpData2($value.c_nlp_businessTypeName)}}</td>
+                                            <td class="td w35">{{#nlpData2($value.b_nlp_businessTypeName)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bizType', false)%>
                                         </tr>
                                         <tr class="tr">
                                             <th class="th w15">申请金额</th>
-                                            <td class="td w35">{{nlpData2($value.c_nlp_businessSum)}}</td>
-                                            <td class="td w35">{{nlpData2($value.b_nlp_businessSum)}}</td>
+                                            <td class="td w35">{{#nlpData2($value.c_nlp_businessSum)}}</td>
+                                            <td class="td w35">{{#nlpData2($value.b_nlp_businessSum)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bizSum', false)%>
                                         </tr>
                                         <tr class="tr">
                                             <th class="th w15">主要担保方式</th>
-                                            <td class="td w35">{{nlpData2($value.c_nlp_vouchTypeName)}}</td>
-                                            <td class="td w35">{{nlpData2($value.b_nlp_vouchTypeName)}}</td>
+                                            <td class="td w35">{{#nlpData2($value.c_nlp_vouchTypeName)}}</td>
+                                            <td class="td w35">{{#nlpData2($value.b_nlp_vouchTypeName)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_vouchType', '$value.nlp_remark_vouchType')%>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w15">用途</th>
-                                            <td class="td w35">{{nlpData2($value.c_nlp_purpose)}}</td>
-                                            <td class="td w35">{{nlpData2($value.b_nlp_purpose)}}</td>
+                                            <td class="td w35">{{#nlpData2($value.c_nlp_purpose)}}</td>
+                                            <td class="td w35">{{#nlpData2($value.b_nlp_purpose)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_purpose', '$value.nlp_remark_purpose')%>
                                         </tr>
                                     </tbody>
@@ -155,7 +155,7 @@
                             <div class="text-box">
                                 {{#$value.phaseOpinion}}
                             </div>
-                            <div class="sub-title">NLP解析结果</div>
+                            <div class="sub-title">语义解析结果</div>
                             <div class="content">
                                 <table class="table table-normal">
                                     <thead class="thead">
@@ -169,68 +169,68 @@
                                     <tbody>
                                         <tr class="tr tr-even">
                                             <th class="th w15">业务品种</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_businessTypeName)}}</td>
-                                            <td class="td w35">{{$value.e_businessTypeName}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_businessTypeName)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.e_businessTypeName)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bizType', false)%>
                                         </tr>
                                         <tr class="tr">
                                             <th class="th w15">申请金额</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_businessSum)}}</td>
-                                            <td class="td w35">{{$value.e_businessSum}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_businessSum)}}</td>
+                                            <td class="td w35">{{#nlpData3(money($value.e_businessSum))}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bizSum', false)%>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w15">币种</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_businessCurrencyName)}}</td>
-                                            <td class="td w35">{{$value.e_businessCurrencyName}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_businessCurrencyName)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.e_businessCurrencyName)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bizCurrency', false)%>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w15">还款方式</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_corpuspayMethodName)}}</td>
-                                            <td class="td w35">{{$value.l_corpuspaymethod}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_corpuspayMethodName)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.l_corpuspaymethod)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_corpMet', '$value.nlp_remark_corpMet')%>
                                         </tr>
                                         <tr class="tr">
                                             <th class="th w15">支付方式</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_payModeName)}}</td>
-                                            <td class="td w35">{{$value.l_paymode}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_payModeName)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.l_paymode)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_payMode', false)%>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w15">利率</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_businessRate)}}</td>
-                                            <td class="td w35">{{percent($value.BUSINESSRATE)}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_businessRate)}}</td>
+                                            <td class="td w35">{{#nlpData3(percent($value.BUSINESSRATE))}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bizRate', false)%>
                                         </tr>
                                         <tr class="tr">
                                             <th class="th w15">利率浮动比例</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_rateFloat)}}</td>
-                                            <td class="td w35">{{percent($value.RATEFLOAT)}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_rateFloat)}}</td>
+                                            <td class="td w35">{{#nlpData3(percent($value.RATEFLOAT))}}</td>
                                             <%=diffTpl2('$value.nlp_compare_rateFloat', false)%>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w15">保证金比例</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_bailRatio)}}</td>
-                                            <td class="td w35">{{percent($value.BAILRATIO)}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_bailRatio)}}</td>
+                                            <td class="td w35">{{#nlpData3(percent($value.BAILRATIO))}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bailRatio', false)%>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w15">手续费</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_pdgSum)}}</td>
-                                            <td class="td w35">{{$value.PDGSUM}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_pdgSum)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.PDGSUM)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_pdgSum', false)%>
                                         </tr>
                                         <tr class="tr">
                                             <th class="th w15">主要担保方式</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_vouchTypeName)}}</td>
-                                            <td class="td w35">{{$value.e_vouchTypeName}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_vouchTypeName)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.e_vouchTypeName)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_vouchType', '$value.nlp_remark_vouchType')%>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w15">用途</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_purpose)}}</td>
-                                            <td class="td w35">{{$value.PURPOSE}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_purpose)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.PURPOSE)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_purpose', '$value.nlp_remark_purpose')%>
                                         </tr>
                                     </tbody>
@@ -257,13 +257,13 @@
                         <div class="text-box">
                             {{#$value.o_phaseOpinion}}
                         </div>
-                        <div class="sub-title">NLP解析结果</div>
+                        <div class="sub-title">语义解析结果</div>
                         <div class="content">
                             <table class="table table-normal">
                                 <thead class="thead">
                                     <tr class="tr">
                                         <th class="th w40">客户名称</th>
-                                        <th class="th w15">NLP解析</th>
+                                        <th class="th w15">语义解析</th>
                                         <th class="th w15">系统评级认定</th>
                                         <th class="th w15">人工认定</th>
                                         <th class="th w15">是否一致</th>
@@ -272,9 +272,9 @@
                                 <tbody>
                                     <tr class="tr tr-even">
                                         <td class="td w40">{{$value.o_customerName}}</td>
-                                        <td class="td w15">{{nlpData2($value.nlp_phaseOpinion)}}</td>
-                                        <td class="td w15">{{$value.o_evaluateResult}}</td>
-                                        <td class="td w15">{{$value.o_cognResult}}</td>
+                                        <td class="td w15">{{#nlpData2($value.nlp_phaseOpinion)}}</td>
+                                        <td class="td w15">{{#nlpData3($value.o_evaluateResult)}}</td>
+                                        <td class="td w15">{{#nlpData3($value.o_cognResult)}}</td>
                                         <%=diffTpl2('$value.nlp_compare_evaluate', '$value.nlp_remark_evaluate')%>
                                     </tr>
                                 </tbody>
@@ -311,13 +311,13 @@
                             <div class="text-box">
                                 {{#$value.o_phaseOpinion}}
                             </div>
-                            <div class="sub-title">NLP解析结果</div>
+                            <div class="sub-title">语义解析结果</div>
                             <div class="content">
                                 <table class="table table-normal">
                                     <thead class="thead">
                                         <tr class="tr">
                                             <th class="th w15">业务要素</th>
-                                            <th class="th w35">NLP解析</th>
+                                            <th class="th w35">语义解析</th>
                                             <th class="th w35">信贷</th>
                                             <th class="th w15">是否一致</th>
                                         </tr>
@@ -325,26 +325,26 @@
                                     <tbody>
                                         <tr class="tr tr-even">
                                             <th class="th w15">额度类型</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_businessTypeCLName)}}</td>
-                                            <td class="td w35">{{$value.o_clTypeName}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_businessTypeCLName)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.o_clTypeName)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bizTypeCL', false)%>
                                         </tr>
                                         <tr class="tr">
                                             <th class="th w15">授信额度金额</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_businessSum)}}</td>
-                                            <td class="td w35">{{$value.o_lineSum}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_businessSum)}}</td>
+                                            <td class="td w35">{{#nlpData3(money($value.o_lineSum))}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bizSum', false)%>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w15">期限</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_term)}}</td>
-                                            <td class="td w35">{{$value.o_term}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_term)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.o_term)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_term', false)%>
                                         </tr>
                                         <tr class="tr">
                                             <th class="th w15">主要担保方式</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_vouchTypeName)}}</td>
-                                            <td class="td w35">{{$value.o_vouchTypeName}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_vouchTypeName)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.o_vouchTypeName)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_vouchType', '$value.nlp_remark_vouchType')%>
                                         </tr>
                                     </tbody>
@@ -373,13 +373,13 @@
                             <div class="text-box">
                                 {{#$value.o_phaseOpinion}}
                             </div>
-                            <div class="sub-title">NLP解析结果</div>
+                            <div class="sub-title">语义解析结果</div>
                             <div class="content">
                                 <table class="table table-normal">
                                     <thead class="thead">
                                         <tr class="tr">
                                             <th class="th w25">调整业务要素</th>
-                                            <th class="th w25">NLP解析</th>
+                                            <th class="th w25">语义解析</th>
                                             <th class="th w25">原始授信</th>
                                             <th class="th w25">调整后</th>
                                         </tr>
@@ -387,27 +387,27 @@
                                     <tbody>
                                         <tr class="tr tr-even">
                                             <th class="th w25">额度类型</th>
-                                            <td class="td w25">{{nlpData2($value.nlp_businessTypeCLName)}}</td>
+                                            <td class="td w25">{{#nlpData2($value.nlp_businessTypeCLName)}}</td>
                                             <td class="td w25"></td>
-                                            <td class="td w25">{{$value.o_clTypeName}}</td>
+                                            <td class="td w25">{{#nlpData3($value.o_clTypeName)}}</td>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w25">额度</th>
-                                            <td class="td w25">{{nlpData2($value.nlp_businessSum)}}</td>
+                                            <td class="td w25">{{#nlpData2($value.nlp_businessSum)}}</td>
                                             <td class="td w25"></td>
-                                            <td class="td w25">{{$value.o_lineSum}}</td>
+                                            <td class="td w25">{{#nlpData3(money($value.o_lineSum))}}</td>
                                         </tr>
                                         <tr class="tr">
                                             <th class="th w25">期限</th>
-                                            <td class="td w25">{{nlpData2($value.nlp_term)}}</td>
+                                            <td class="td w25">{{#nlpData2($value.nlp_term)}}</td>
                                             <td class="td w25"></td>
-                                            <td class="td w25">{{$value.o_term}}</td>
+                                            <td class="td w25">{{#nlpData3($value.o_term)}}</td>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w25">担保方式</th>
-                                            <td class="td w25">{{nlpData2($value.nlp_vouchTypeName)}}</td>
+                                            <td class="td w25">{{#nlpData2($value.nlp_vouchTypeName)}}</td>
                                             <td class="td w25"></td>
-                                            <td class="td w25">{{$value.o_vouchTypeName}}</td>
+                                            <td class="td w25">{{#nlpData3($value.o_vouchTypeName)}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -436,13 +436,13 @@
                             <div class="text-box">
                                 {{#$value.o_phaseOpinion}}
                             </div>
-                            <div class="sub-title">NLP解析结果</div>
+                            <div class="sub-title">语义解析结果</div>
                             <div class="content">
                                 <table class="table table-normal">
                                     <thead class="thead">
                                         <tr class="tr">
                                             <th class="th w15">业务要素</th>
-                                            <th class="th w35">NLP解析</th>
+                                            <th class="th w35">语义解析</th>
                                             <th class="th w35">信贷</th>
                                             <th class="th w15">是否一致</th>
                                         </tr>
@@ -450,80 +450,80 @@
                                     <tbody>
                                         <tr class="tr tr-even">
                                             <th class="th w15">业务品种</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_businessTypeName)}}</td>
-                                            <td class="td w35">{{$value.o_businessTypeName}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_businessTypeName)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.o_businessTypeName)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bizType', false)%>
                                         </tr>
                                         <tr class="tr">
                                             <th class="th w15">申请金额</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_businessSum)}}</td>
-                                            <td class="td w35">{{$value.o_businessSum}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_businessSum)}}</td>
+                                            <td class="td w35">{{#nlpData3(money($value.o_businessSum))}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bizSum', false)%>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w15">币种</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_businessCurrencyName)}}</td>
-                                            <td class="td w35">{{$value.o_businessCurrencyName}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_businessCurrencyName)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.o_businessCurrencyName)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bizCurrency', false)%>
                                         </tr>
                                         <tr class="tr">
                                             <th class="th w15">期限</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_term)}}</td>
-                                            <td class="td w35">{{$value.o_term}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_term)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.o_term)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_term', '$value.nlp_remark_term')%>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w15">还款方式</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_corpuspayMethodName)}}</td>
-                                            <td class="td w35">{{$value.o_corpuspayMethodName}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_corpuspayMethodName)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.o_corpuspayMethodName)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_corpMet', '$value.nlp_remark_corpMet')%>
                                         </tr>
                                         <tr class="tr">
                                             <th class="th w15">支付方式</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_payModeName)}}</td>
-                                            <td class="td w35">{{$value.o_payModeName}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_payModeName)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.o_payModeName)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_payMode', false)%>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w15">利率</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_businessRate)}}</td>
-                                            <td class="td w35">{{percent($value.o_businessRate)}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_businessRate)}}</td>
+                                            <td class="td w35">{{#nlpData3(percent($value.o_businessRate))}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bizRate', false)%>
                                         </tr>
                                         <tr class="tr">
                                             <th class="th w15">利率浮动比例</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_rateFloat)}}</td>
-                                            <td class="td w35">{{percent($value.o_rateFloat)}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_rateFloat)}}</td>
+                                            <td class="td w35">{{#nlpData3(percent($value.o_rateFloat))}}</td>
                                             <%=diffTpl2('$value.nlp_compare_rateFloat', false)%>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w15">保证金比例</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_bailRatio)}}</td>
-                                            <td class="td w35">{{percent($value.o_bailRatio)}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_bailRatio)}}</td>
+                                            <td class="td w35">{{#nlpData3(percent($value.o_bailRatio))}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bailRatio', false)%>
                                         </tr>
                                         <tr class="tr">
                                             <th class="th w15">保证金</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_bailSum)}}</td>
-                                            <td class="td w35">{{$value.o_bailSum}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_bailSum)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.o_bailSum)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bailSum', false)%>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w15">手续费</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_pdgSum)}}</td>
-                                            <td class="td w35">{{$value.o_pdgSum}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_pdgSum)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.o_pdgSum)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_pdgSum', false)%>
                                         </tr>
                                         <tr class="tr">
                                             <th class="th w15">主要担保方式</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_vouchTypeName)}}</td>
-                                            <td class="td w35">{{$value.o_vouchTypeName}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_vouchTypeName)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.o_vouchTypeName)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_vouchType', '$value.nlp_remark_vouchType')%>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w15">用途</th>
-                                            <td class="td w35">{{nlpData2($value.nlp_purpose)}}</td>
-                                            <td class="td w35">{{$value.o_purpose}}</td>
+                                            <td class="td w35">{{#nlpData2($value.nlp_purpose)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.o_purpose)}}</td>
                                             <%=diffTpl2('$value.nlp_compare_purpose', '$value.nlp_remark_purpose')%>
                                         </tr>
                                     </tbody>

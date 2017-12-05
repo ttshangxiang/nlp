@@ -8,31 +8,8 @@ require('../css/detail.less');
 var $ = require('jquery');
 var template = require('../lib/template');
 var util = require('../public/util')
+require('../public/template-helper');
 // require('../lib/mockjsTpl');
-
-// 解析数据
-template.helper('nlpData2', function (nlp) {
-    nlp = nlp || '';
-    var defaultStr = '无解析数据';
-    if (!nlp || nlp === 'Null') {
-        return defaultStr;
-    }
-    return nlp.replace('&&', ',');
-});
-
-// 百分比
-template.helper('percent', function (str) {
-    str = str || '';
-    str = str + '';
-    str = str.replace('%', '');
-    if (!str || str == '0') {
-        return str + '%';
-    }
-    if (isNaN(parseFloat(str))) {
-        return str;
-    }
-    return str + '%';
-});
 
 // 渲染树
 var renderTree = function (data, node) {
@@ -246,6 +223,13 @@ var diffShouxin = function (list) {
         obj._id = 'shouxin_' + i;
         obj.text = obj.o_businessTypeName || ('授信' + (i + 1));
         obj.title = '授信' + (i + 1) + '-' + (obj.o_businessTypeName || '');
+        if (obj.o_lineEffFlag && obj.o_lineEffFlag == '2') {
+            obj.text += '(生效中)';
+            obj.title += '(生效中)';
+        } else {
+            obj.text += '(已失效)';
+            obj.title += '(已失效)';
+        }
         totalMoney += parseFloat(obj.nlp_bizSum) || 0;
         obj.o_term = (obj.o_termMonth ? (obj.o_termMonth + '个月') : '') + (obj.o_termDay ? (obj.o_termDay + '天') : '');
         try {
@@ -271,6 +255,13 @@ var diffTiaozheng = function (list) {
         obj._id = 'tiaozheng_' + i;
         obj.text = obj.o_businessTypeName || ('授信调整' + (i + 1));
         obj.title = '授信调整' + (i + 1) + '-' + (obj.o_businessTypeName || '');
+        if (obj.o_lineEffFlag && obj.o_lineEffFlag == '2') {
+            obj.text += '(生效中)';
+            obj.title += '(生效中)';
+        } else {
+            obj.text += '(已失效)';
+            obj.title += '(已失效)';
+        }
         obj.o_term = (obj.o_termMonth ? (obj.o_termMonth + '个月') : '') + (obj.o_termDay ? (obj.o_termDay + '天') : '');
         try {
             var arr = JSON.parse(obj.o_nlpPhaseOpinion);

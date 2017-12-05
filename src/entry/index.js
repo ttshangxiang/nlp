@@ -7,12 +7,8 @@ if (module.hot) {
 require('../css/index.less');
 var $ = require('jquery');
 var template = require('../lib/template');
+require('../public/template-helper');
 // require('../lib/mockjsTpl');
-
-// 转义
-template.helper('encodeURIComponent', function (str) {
-    return encodeURIComponent(str);
-});
 
 $(function () {
     var init1 = require('../page/nlp_uncleared');

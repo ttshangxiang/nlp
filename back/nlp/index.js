@@ -505,7 +505,7 @@ function getShouxin2 (customerId, customerName) {
         var selectSQL =
         `select c.lineId as o_lineId, c.approveId as o_approveId, c.clTypeName as o_clTypeName, c.businessTypeName as o_businessTypeName,
         c.lineSum as o_lineSum, c.vouchTypeName as o_vouchTypeName, c.customerID as o_customerID, c.termMonth as o_termMonth, c.termDay as o_termDay,
-        a.nlp_phaseOpinion as o_nlpPhaseOpinion, a.phaseOpinion as o_phaseOpinion, a.*, b.* from nlp_unstrured_info a
+        a.nlp_phaseOpinion as o_nlpPhaseOpinion, a.phaseOpinion as o_phaseOpinion, a.lineEffFlag as o_lineEffFlag, a.*, b.* from nlp_unstrured_info a
         LEFT JOIN nlp_check_elements_info b ON a.lineId = b.lineId
         LEFT JOIN nlp_cl_info c ON a.lineId = c.lineId
         WHERE ${where}`;
@@ -531,7 +531,7 @@ function getShouxintiaozheng2 (customerId, customerName) {
         var selectSQL =
         `select c.lineId as o_lineId, c.approveId as o_approveId, c.clTypeName as o_clTypeName, c.businessTypeName as o_businessTypeName,
         c.lineSum as o_lineSum, c.termMonth as o_termMonth, c.vouchTypeName as o_vouchTypeName, c.customerID as o_customerID,
-        a.nlp_phaseOpinion as o_nlpPhaseOpinion, a.phaseOpinion as o_phaseOpinion, a.*, b.* from nlp_unstrured_info a
+        a.nlp_phaseOpinion as o_nlpPhaseOpinion, a.phaseOpinion as o_phaseOpinion, a.lineEffFlag as o_lineEffFlag, a.*, b.* from nlp_unstrured_info a
         LEFT JOIN nlp_check_elements_info b ON a.lineId = b.lineId
         LEFT JOIN nlp_modify_cl_info c ON a.lineId = c.lineId
         WHERE ${where}`;

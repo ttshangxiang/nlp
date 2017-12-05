@@ -15,7 +15,9 @@ var checkAuth = function (req) {
         obj = userList[access_token];
     }
     if (obj) {
-        if (new Date().getTime - obj.time < delay) {
+        var now = new Date().getTime();
+        if (now - obj.time < delay) {
+            obj.time = now;
             return true;
         } else {
             delete userList[access_token];
