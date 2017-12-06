@@ -3,35 +3,31 @@ var request = require('request');
 var config = require('../deploy_conf/config')
 
 // 用户列表
-var userList = {};
 var delay = 30 * 60 * 1000;
 
-var checkAuth = function (req) {
+var setCookie = function (res, nlp_access_token) {
+    res.cookie('nlp_access_token', nlp_access_token, {
+        maxAge: delay,
+        path: '/',
+        httpOnly: true
+    });
+};
+
+var checkAuth = function (req, res) {
     // 带有效cookie
-    var obj = null;
-    var access_token = null;
-    if (req.cookies && req.cookies.nlp_access_token) {
-        access_token = req.cookies.nlp_access_token;
-        obj = userList[access_token];
-    }
-    if (obj) {
-        var now = new Date().getTime();
-        if (now - obj.time < delay) {
-            obj.time = now;
-            return true;
-        } else {
-            delete userList[access_token];
-        }
+    var nlp_access_token = req.cookies.nlp_access_token;
+    if (nlp_access_token) {
+        setCookie(res, nlp_access_token);
     }
     return false;
 };
 
 var auth = function (req, res, next) {
-    if (checkAuth(req)) {
-        next();
-        return;
-    }
     if (req.path == '/' || /\/.*\.html/.test(req.path)) {
+        if (checkAuth(req, res)) {
+            next();
+            return;
+        }
         // 带authToken
         var token = req.query.authToken || req.cookies.nlp_access_token;
         if (!token) {
@@ -46,8 +42,7 @@ var auth = function (req, res, next) {
             }
             var info = JSON.parse(body);
             if (info.code == 'SUCCESS') {
-                userList[token] = { value: info.value, time: new Date().getTime() };
-                res.cookie('nlp_access_token', token, {path: '/', httpOnly: true});
+                setCookie(res, token);
                 if (req.path == '/') {
                     res.redirect('/');
                 } else {
@@ -58,6 +53,10 @@ var auth = function (req, res, next) {
             }
         });
     } else if (/\/api\//.test(req.path)) {
+        if (checkAuth(req, res)) {
+            next();
+            return;
+        }
         res.status(403).send({status: 403, msg: 'Not Logged In'});
     } else {
         next();
@@ -68,25 +67,6 @@ var fail = function (req, res) {
     res.redirect(config.loginUrl);
 };
 
-var clear = function (u) {
-    userList[u].time = 0
-}
-
-var clearOutTime = function () {
-    setInterval(function () {
-        var time = new Date().getTime();
-        for (var u in userList) {
-            u.time && time - u.time > delay && delete userList[u];
-        }
-    }, 60000);
-};
-
-// 定时清理
-clearOutTime();
-
-
-
 module.exports = {
-    auth: auth,
-    clear: clear
+    auth: auth
 };

@@ -218,7 +218,7 @@
                                         <tr class="tr tr-even">
                                             <th class="th w15">手续费</th>
                                             <td class="td w35">{{#nlpData2($value.nlp_pdgSum)}}</td>
-                                            <td class="td w35">{{#nlpData3($value.PDGSUM)}}</td>
+                                            <td class="td w35">{{#nlpData3(money2($value.PDGSUM))}}</td>
                                             <%=diffTpl2('$value.nlp_compare_pdgSum', false)%>
                                         </tr>
                                         <tr class="tr">
@@ -505,13 +505,13 @@
                                         <tr class="tr">
                                             <th class="th w15">保证金</th>
                                             <td class="td w35">{{#nlpData2($value.nlp_bailSum)}}</td>
-                                            <td class="td w35">{{#nlpData3($value.o_bailSum)}}</td>
+                                            <td class="td w35">{{#nlpData3(money2($value.o_bailSum))}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bailSum', false)%>
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w15">手续费</th>
                                             <td class="td w35">{{#nlpData2($value.nlp_pdgSum)}}</td>
-                                            <td class="td w35">{{#nlpData3($value.o_pdgSum)}}</td>
+                                            <td class="td w35">{{#nlpData3(money2($value.o_pdgSum))}}</td>
                                             <%=diffTpl2('$value.nlp_compare_pdgSum', false)%>
                                         </tr>
                                         <tr class="tr">

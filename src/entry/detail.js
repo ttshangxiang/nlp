@@ -344,8 +344,8 @@ var diffY = function (list) {
             obj.c_nlp_businessTypeName = '';
         }
         obj.c_nlp_businessTypeName = obj.c_nlp_businessTypeName.replace('&&', ',');
-        obj.text = obj.b_nlp_businessTypeName || ('用信与授信核对' + (i + 1));
-        obj.title = '用信与授信核对' + (i + 1) + '-' + (obj.b_nlp_businessTypeName || '');
+        obj.text = obj.b_nlp_businessTypeName || ('授信与用信核对' + (i + 1));
+        obj.title = '授信与用信核对' + (i + 1) + '-' + (obj.b_nlp_businessTypeName || '');
         try {
             var arr = JSON.parse(obj.b_nlp_PhaseOpinion);
             obj.json = {};

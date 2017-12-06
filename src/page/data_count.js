@@ -101,13 +101,12 @@ var renderCharts2 = function (id, data) {
         dataZoom: [{
             type: 'slider',
             show: true,
-            start: 0,
-            end: 50,
-            handleSize: 8
+            startValue: 0,
+            endValue: 14
         }, {
             type: 'inside',
-            start: 0,
-            end: 50
+            startValue: 0,
+            endValue: 19
         }],
         series : [{
             name:'数量',

@@ -67,3 +67,11 @@ template.helper('nlpData3', function (nlp) {
     }
     return nlp.replace('&&', ',');
 });
+
+// 金钱格式化
+template.helper('moneny2', function (num) {
+    if (!num && num !== 0) {
+        return '';
+    }
+    return num + '元';
+});

@@ -65,7 +65,7 @@ var getUnCleared = function () {
                 renderPage(res.data.data, query.totalCount);
                 // 分页
                 if (res.data.data[0]) {
-                    var patchdate = res.data.data[0].patchdate;
+                    var patchdate = res.data.data[0].patchdate || '-';
                     if (patchdate.length == 8) {
                         patchdate = patchdate.substr(0, 4) + '年' + patchdate.substr(4, 2) + '月', + patchdate(6) + '日';
                     }
