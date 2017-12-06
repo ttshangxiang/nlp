@@ -188,7 +188,7 @@ router.get('/uncleared', function (req, res, next) {
 
     var whereArr = [];
     if (customerName) {
-        whereArr.push('customerName like "%' + customerName + '%"');
+        whereArr.push('(customerName like "%' + customerName + '%" or customerID = "' + customerName + '")');
     }
     if (duebillID) {
         whereArr.push('duebillID = "' + duebillID + '"');
@@ -475,14 +475,13 @@ router.get('/jiexi2', function (req, res, next) {
 // 获取新版评级
 function getPingji2 (customerName) {
     var p = new Promise(function (resolve, reject) {
-        var where = ' a.customerName = "' + customerName + '"';
-        where += ' and a.nlp_identify = "A"';
+        var where = ' c.customerName = "' + customerName + '"';
         var selectSQL =
-        `select c.evaluateResult as o_evaluateResult, c.cognResult as o_cognResult, c.customerID as o_customerID,
-        a.nlp_phaseOpinion as o_nlpPhaseOpinion, a.phaseOpinion as o_phaseOpinion, a.*, b.* from nlp_unstrured_info a
-        LEFT JOIN nlp_check_elements_info b ON a.customerID = b.customerID
-        LEFT JOIN nlp_evaluate_info c ON a.customerID = c.customerID
-        WHERE ${where}`;
+        `select c.customerName as o_customerName, c.evaluateResult as o_evaluateResult, c.cognResult as o_cognResult, c.customerID as o_customerID,
+        a.nlp_phaseOpinion as o_nlpPhaseOpinion, a.phaseOpinion as o_phaseOpinion, a.*, b.* from nlp_evaluate_info c
+        LEFT JOIN nlp_check_elements_info b ON c.customerID = b.customerID
+        LEFT JOIN nlp_unstrured_info a ON c.customerID = a.customerID
+        WHERE ${where} limit 1`;
         db.find(selectSQL, function (data) {
             if (data === 'error') {
                 resolve('error');

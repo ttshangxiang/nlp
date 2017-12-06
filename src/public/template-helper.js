@@ -12,16 +12,19 @@ template.helper('nlpData2', function (nlp) {
     if (!nlp || nlp === 'Null') {
         return defaultStr;
     }
-    return nlp.replace('&&', ',');
+    return nlp.replace(/\&\&/g, ',');
 });
 
 // 百分比
 template.helper('percent', function (str) {
+    if (str === 0) {
+        str = '0';
+    }
     str = str || '';
     str = str + '';
     str = str.replace('%', '');
-    if (!str && str !== '0') {
-        return str + '%';
+    if (!str || str === 'Null') {
+        return '';
     }
     if (isNaN(str)) {
         return str;
@@ -65,7 +68,7 @@ template.helper('nlpData3', function (nlp) {
     if (!nlp || nlp === 'Null') {
         return defaultStr;
     }
-    return nlp.replace('&&', ',');
+    return nlp.replace(/\&\&/g, ',');
 });
 
 // 金钱格式化

@@ -13,7 +13,7 @@ router.get('/uncleared', function (req, res, next) {
 
     var whereArr = [];
     if (customerName) {
-        whereArr.push('customerName like "%' + customerName + '%"');
+        whereArr.push('(customerName like "%' + customerName + '%" or customerID = "' + customerName + '")');
     }
     if (duebillID) {
         whereArr.push('duebillID = "' + duebillID + '"');
@@ -38,8 +38,8 @@ router.get('/uncleared', function (req, res, next) {
     }
 
     
-    var fields = ['customerName', 'duebillID', 'contractId', 'putoutID', 'businessTypeName', 'businessCurrencyName', 'businessSum', 'balance', 'interestbalance1', 'interestbalance2', 'operateOrgName'];
-    var fieldNames = ['客户名称', '借据流水号', '合同号', '出帐号', '业务品种', '币种', '借据金额', '余额', '表内欠息', '表外欠息', '经办机构'];
+    var fields = ['customerName', '_customerID', '_duebillID', '_contractId', '_putoutID', 'businessTypeName', 'businessCurrencyName', 'businessSum', 'balance', 'interestbalance1', 'interestbalance2', 'operateOrgName'];
+    var fieldNames = ['客户名称', '客户编号', '借据流水号', '合同号', '出帐号', '业务品种', '币种', '借据金额', '余额', '表内欠息', '表外欠息', '经办机构'];
     
     // 查询总数
     var p = new Promise(function (resolve, reject) {
@@ -61,7 +61,8 @@ router.get('/uncleared', function (req, res, next) {
         }
         var querySQL = `select concat("'", a.duebillID) as _duebillID,
             concat("'", a.contractId) as _contractId,
-            concat("'", a.putoutID) as _putoutID, a.* from nlp_uncleared_credit a` + whereStr;
+            concat("'", a.putoutID) as _putoutID,
+            concat("'", a.customerID) as _customerID, a.* from nlp_uncleared_credit a` + whereStr;
         db.find(querySQL, function (data) {
             if (data === 'error') {
                 res.status(500).send('查询数据库失败');

@@ -231,7 +231,7 @@ var diffShouxin = function (list) {
             obj.title += '(已失效)';
         }
         totalMoney += parseFloat(obj.nlp_bizSum) || 0;
-        obj.o_term = (obj.o_termMonth ? (obj.o_termMonth + '个月') : '') + (obj.o_termDay ? (obj.o_termDay + '天') : '');
+        obj.o_term = getTerm(obj.o_termMonth, obj.o_termDay);
         try {
             var arr = JSON.parse(obj.o_nlpPhaseOpinion);
             obj.json = {};
@@ -262,7 +262,7 @@ var diffTiaozheng = function (list) {
             obj.text += '(已失效)';
             obj.title += '(已失效)';
         }
-        obj.o_term = (obj.o_termMonth ? (obj.o_termMonth + '个月') : '') + (obj.o_termDay ? (obj.o_termDay + '天') : '');
+        obj.o_term = getTerm(obj.o_termMonth, obj.o_termDay);
         try {
             var arr = JSON.parse(obj.o_nlpPhaseOpinion);
             obj.json = {};
@@ -286,7 +286,7 @@ var diffYongxin = function (list) {
         obj._id = 'yongxin_' + i;
         obj.text = obj.o_businessTypeName || ('用信' + (i + 1));
         obj.title = '用信' + (i + 1) + '-' + (obj.o_businessTypeName || '');
-        obj.o_term = (obj.o_termMonth ? (obj.o_termMonth + '个月') : '') + (obj.o_termDay ? (obj.o_termDay + '天') : '');
+        obj.o_term = getTerm(obj.o_termMonth, obj.o_termDay);
         totalMoney += parseFloat(obj.nlp_bizSum) || 0;
         try {
             var arr = JSON.parse(obj.o_nlpPhaseOpinion);
@@ -372,6 +372,16 @@ var diffY = function (list) {
     }
     return list;
 };
+
+var getTerm = function (termMonth, termDay) {
+    if (!termMonth && termMonth !== 0 && !termDay && termDay !== 0) {
+        return '';
+    }
+    if (!termMonth && !termDay) {
+        return '0个月';
+    }
+    return (termMonth ? (termMonth + '个月') : '') + (termDay ? (termDay + '天') : '');
+}
 
 // 染色
 var addColor = function (json, text) {

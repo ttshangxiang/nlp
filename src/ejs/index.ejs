@@ -83,7 +83,7 @@
                     <div class="center-title">未结清授信业务情况</div>
                     <div class="filter-line clearfix">
                         <div class="input-box">
-                            <label>客户名称：</label>
+                            <label>客户名称/ID：</label>
                             <input type="text" name="customerName">
                         </div>
                         <div class="input-box">
@@ -121,10 +121,11 @@
                 </div>
                 <script type="text/html" id="nlp-uncleared-tpl">
                     <div class="nlp-table-wrap">
-                        <table class="nlp-table" style="width: 1480px;">
+                        <table class="nlp-table" style="width: 1670px;">
                             <tr>
                                 <th style="width: 40px"></th>
                                 <th style="width: 250px;">客户名称</th>
+                                <th style="width: 150px;">客户编号</th>
                                 <th style="width: 150px;">借据流水号</th>
                                 <th style="width: 150px;">合同号</th>
                                 <th style="width: 150px;">出帐号</th>
@@ -142,6 +143,7 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td><a href="/detail.html?name={{encodeURIComponent($value.customerName)}}" target="_blank">{{ $value.customerName }}</a></td>
                                     <td>{{ $value.duebillID }}</td>
+                                    <td>{{ $value.customerID }}</td>
                                     <td>{{ $value.contractId }}</td>
                                     <td>{{ $value.putoutID }}</td>
                                     <td>{{ $value.businessTypeName }}</td>
