@@ -1,0 +1,152 @@
+<div class="center hide card" id="card-6">
+    <div class="center-header">
+        <div class="center-title">核对结果列表</div>
+        <div class="filter-line clearfix">
+            <div class="input-box">
+                <a href="/api/export/check_result" id="export-check-result" target="_blank">导出</a>
+                <!-- <a href="javascript:;" id="nlp-check-result-query">查询</a> -->
+            </div>
+        </div>
+    </div>
+    <div class="center-body" id="nlp-check-result">
+        <div class="detail-loading">
+            <i class="icon-loading-static-icon"></i>
+            <span>加载中...</span>
+        </div>
+    </div>
+    <script type="text/html" id="nlp-check-result-tpl">
+        <div class="nlp-table-wrap">
+            {{if data.length > 0}}
+            <table class="nlp-table" style="width: 1px;">
+                <tr>
+                    <th style="width: 40px">#</th>
+                    <th style="width: 100px">阶段</th>
+                    <th style="width: 200px">客户名称</th>
+                    <th style="width: 200px">客户编号</th>
+                    <th style="width: 200px">额度编号</th>
+                    {{if !match(type, 'ABD')}}
+                    <th style="width: 200px">合同编号</th>{{/if}}
+                    <th style="width: 200px">用信标号</th>
+                    {{if match(type, 'A')}}
+                    <th style="width: 150px">评级结果是否一致</th>{{/if}}
+                    {{if match(type, 'FXY')}}
+                    <th style="width: 200px">业务品种/业务名称是否一致</th>{{/if}}
+                    {{if match(type, 'BD')}}
+                    <th style="width: 150px">额度类型是否一致</th>{{/if}}
+                    {{if match(type, 'BDFXY')}}
+                    <th style="width: 150px">金额是否一致</th>{{/if}}
+                    {{if match(type, 'BDF')}}
+                    <th style="width: 150px">期限是否一致</th>{{/if}}
+                    {{if match(type, 'FX')}}
+                    <th style="width: 150px">执行年利率是否一致</th>{{/if}}
+                    {{if match(type, 'FX')}}
+                    <th style="width: 150px">利率浮动是否一致</th>{{/if}}
+                    {{if false}}
+                    <th style="width: 150px">利率调整方式是否一致</th>{{/if}}
+                    {{if match(type, 'FX')}}
+                    <th style="width: 150px">还款方式是否一致</th>{{/if}}
+                    {{if match(type, 'FX')}}
+                    <th style="width: 150px">支付方式是否一致</th>{{/if}}
+                    {{if match(type, 'FXY')}}
+                    <th style="width: 150px">用途是否一致</th>{{/if}}
+                    {{if match(type, 'FX')}}
+                    <th style="width: 150px">手续费是否一致</th>{{/if}}
+                    {{if false}}
+                    <th style="width: 150px">受益人是否一致</th>
+                    <th style="width: 150px">收款人是否一致</th>
+                    <th style="width: 150px">信用证类型是否一致</th>
+                    <th style="width: 150px">最高额合同是否一致</th>
+                    <th style="width: 150px">重点事项是否一致</th>
+                    {{/if}}
+                    {{if match(type, 'F')}}
+                    <th style="width: 150px">保证金是否一致</th>{{/if}}
+                    {{if match(type, 'FX')}}
+                    <th style="width: 150px">保证金比例是否一致</th>{{/if}}
+                    {{if match(type, 'BDFXY')}}
+                    <th style="width: 150px">主要担保方式是否一致</th>{{/if}}
+                    {{if match(type, 'FX')}}
+                    <th style="width: 150px">币种是否一致</th>{{/if}}
+                </tr>
+                <tbody>
+                    {{each data}}
+                    <tr>
+                        <td>{{ indexStart + $index + 1 }}</td>
+                        <td>{{ jieduan($value.nlp_identify) }}</td>
+                        <td><a href="/detail.html?name={{encodeURIComponent($value.customerName)}}&customerId={{$value.customerID}}" target="_blank">{{ $value.customerName }}</a></td>
+                        <td>{{ isNull($value.customerID) }}</td>
+                        <td>{{ isNull($value.lineId) }}</td>
+                        {{if !match(type, 'ABD')}}
+                        <td>{{ isNull($value.contractId) }}</td>{{/if}}
+                        <td>{{ isNull($value.approveId) }}</td>
+                        {{if match(type, 'A')}}
+                        <td>{{ shifou($value.nlp_compare_evaluate) }}</td>{{/if}}
+                        {{if match(type, 'FXY')}}
+                        <td>{{ shifou($value.nlp_compare_bizType) }}</td>{{/if}}
+                        {{if match(type, 'BD')}}
+                        <td>{{ shifou($value.nlp_compare_bizTypeCL) }}</td>{{/if}}
+                        {{if match(type, 'BDFXY')}}
+                        <td>{{ shifou($value.nlp_compare_bizSum) }}</td>{{/if}}
+                        {{if match(type, 'BDF')}}
+                        <td>{{ shifou($value.nlp_compare_term) }}</td>{{/if}}
+                        {{if match(type, 'FX')}}
+                        <td>{{ shifou($value.nlp_compare_bizRate) }}</td>{{/if}}
+                        {{if match(type, 'FX')}}
+                        <td>{{ shifou($value.nlp_compare_rateFloat) }}</td>{{/if}}
+                        {{if false}}
+                        <td>{{ shifou($value.nlp_compare_rateMondify) }}</td>{{/if}}
+                        {{if match(type, 'FX')}}
+                        <td>{{ shifou($value.nlp_compare_corpMet) }}</td>{{/if}}
+                        {{if match(type, 'FX')}}
+                        <td>{{ shifou($value.nlp_compare_payMode) }}</td>{{/if}}
+                        {{if match(type, 'FXY')}}
+                        <td>{{ shifou($value.nlp_compare_purpose) }}</td>{{/if}}
+                        {{if match(type, 'FX')}}
+                        <td>{{ shifou($value.nlp_compare_pdgSum) }}</td>{{/if}}
+                        {{if false}}
+                        <td>{{ shifou($value.nlp_compare_benefitCorp) }}</td>
+                        <td>{{ shifou($value.nlp_compare_gathering) }}</td>
+                        <td>{{ shifou($value.nlp_compare_lcType) }}</td>
+                        <td>{{ shifou($value.nlp_compare_contractMax) }}</td>
+                        <td>{{ shifou($value.nlp_compare_keyItems) }}</td>
+                        {{/if}}
+                        {{if match(type, 'F')}}
+                        <td>{{ shifou($value.nlp_compare_bailSum) }}</td>{{/if}}
+                        {{if match(type, 'FX')}}
+                        <td>{{ shifou($value.nlp_compare_bailRatio) }}</td>{{/if}}
+                        {{if match(type, 'BDFXY')}}
+                        <td>{{ shifou($value.nlp_compare_vouchType) }}</td>{{/if}}
+                        {{if match(type, 'FX')}}
+                        <td>{{ shifou($value.nlp_compare_bizCurrency) }}</td>{{/if}}
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            <!-- 无数据 -->
+            {{else}}
+            <div class="empty-main">
+                <div class="wrapper">
+                    <div class="no-company-data icon-no-data-face"></div>
+                    <p class="main-tips">{{msg || '没有数据'}}</p>
+                </div>
+            </div>
+            {{/if}}
+        </div>
+        <!-- 加载中 -->
+        <div class="detail-loading">
+            <i class="icon-loading-static-icon"></i>
+            <span>加载中...</span>
+        </div>
+        <!-- 总数 -->
+        {{if total}}
+        <div class="total-tips">共{{total}}条数据</div>
+        {{/if}}
+        <!--只有一页,不显示-->
+        {{if total > pageSize}}
+        <div class="group-footer">
+            <div class="pagination-area clearfix">
+                <div id="paginationGroup6" class="m-pagination"></div>
+            </div>
+        </div>
+        {{/if}}
+    </script>
+</div>

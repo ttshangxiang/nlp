@@ -157,7 +157,6 @@ body, html {
 
     .card .content .table-normal tbody .tr .td.compare-td {
         text-align: center;
-        position: relative;
     }
 
     .card .content .table-normal thead .tr .th {
@@ -210,10 +209,17 @@ body, html {
         color: #000;
     }
 
+    .fr-d {
+        float: right;
+        position: relative;
+        width: 0px;
+        height: 0px;
+    }
+
     .helper {
         position: absolute;
-        right: 4px;
-        top: 6px;
+        right: 0px;
+        top: 0px;
         cursor: pointer;
         &:hover .helper-text-wrap {
             display: block;
@@ -252,7 +258,6 @@ body, html {
     position: fixed;
     top: 0;
     z-index: 998;
-
     .company-name {
         font-size: 18px;
         line-height: 48px;
@@ -261,7 +266,6 @@ body, html {
         border-bottom: 1px solid #e9e8e8;
         margin: 0 15px;
     }
-
     .sub-tags-wrap {
         width: 998px;
         background: #fff;

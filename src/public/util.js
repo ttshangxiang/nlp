@@ -14,5 +14,17 @@ module.exports = {
 			error && error(err);
 		}
 		$.ajax(options);
+	},
+	resetChart: function (id) {
+		var dom = $('#' + id);
+		var instance = echarts.getInstanceByDom(dom[0]);
+		if (instance && !instance.isDisposed) {
+			instance.dispose();
+		}
+		var parent = dom.parent();
+		dom.remove();
+		var newDom = $('<div class="charts" id="' + id + '"></div>');
+		parent.append(newDom);
+		return newDom;
 	}
 }

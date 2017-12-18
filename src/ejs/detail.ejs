@@ -82,7 +82,7 @@
                             </div>
                             <div class="customer-code-group">
                                 <div class="customer-code">额度编号: {{$value.c_lineId}}</div>
-                                <div class="customer-code">用信编号: {{$value.b_approveId}}</div>
+                                <div class="customer-code">用信流水号: {{$value.b_applyId}}</div>
                             </div>
                             <div class="sub-title">授信意见</div>
                             <div class="text-box">
@@ -114,7 +114,26 @@
                                             <th class="th w15">申请金额</th>
                                             <td class="td w35">{{#nlpData2($value.c_nlp_businessSum)}}</td>
                                             <td class="td w35">{{#nlpData2($value.b_nlp_businessSum)}}</td>
-                                            <%=diffTpl2('$value.nlp_compare_bizSum', false)%>
+                                            {{if $value.nlp_compare_bizSum > 1 || $value.nlp_compare_bizSum === null}}
+                                                <td class="td w15 compare-td"></td>
+                                            {{else}}
+                                                <td class="td w15 compare-td {{if $value.nlp_compare_bizSum == '0'}}differ{{/if}} {{if $value.nlp_compare_bizSum == '1'}}correct{{/if}}">
+                                                    {{$value.nlp_compare_bizSum == '1' ? '是' : '否'}}
+                                                    <div class="fr-d">
+                                                    <div class="helper icon-detail-help">
+                                                        <div class="helper-text-wrap">
+                                                            <div class="helper-text">
+                                                            {{if $value.nlp_compare_bizSum == '1'}}
+                                                            用信金额符合授信金额
+                                                            {{else}}
+                                                            用信金额不符合授信金额
+                                                            {{/if}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                </td>
+                                            {{/if}}
                                         </tr>
                                         <tr class="tr">
                                             <th class="th w15">主要担保方式</th>
@@ -148,8 +167,8 @@
                                 </h3>
                             </div>
                             <div class="customer-code-group">
-                                <div class="customer-code">借据号: {{$value.e_duebillID}}</div>
-                                <div class="customer-code">用信编号: {{$value.approveId}}</div>
+                                <div class="customer-code">借据流水号: {{$value.e_duebillID}}</div>
+                                <div class="customer-code">用信流水号: {{$value.applyId}}</div>
                             </div>
                             <div class="sub-title">用信意见</div>
                             <div class="text-box">
@@ -176,8 +195,27 @@
                                         <tr class="tr">
                                             <th class="th w15">申请金额</th>
                                             <td class="td w35">{{#nlpData2($value.nlp_businessSum)}}</td>
-                                            <td class="td w35">{{#nlpData3(money($value.e_businessSum))}}</td>
-                                            <%=diffTpl2('$value.nlp_compare_bizSum', false)%>
+                                            <td class="td w35">{{#nlpData3(money($value.e_businessSum, $value.e_businessCurrencyName))}}</td>
+                                            {{if $value.nlp_compare_bizSum > 1 || $value.nlp_compare_bizSum === null}}
+                                                <td class="td w15 compare-td"></td>
+                                            {{else}}
+                                                <td class="td w15 compare-td {{if $value.nlp_compare_bizSum == '0'}}differ{{/if}} {{if $value.nlp_compare_bizSum == '1'}}correct{{/if}}">
+                                                    {{$value.nlp_compare_bizSum == '1' ? '是' : '否'}}
+                                                    <div class="fr-d">
+                                                    <div class="helper icon-detail-help">
+                                                        <div class="helper-text-wrap">
+                                                            <div class="helper-text">
+                                                            {{if $value.nlp_compare_bizSum == '1'}}
+                                                            放款金额符合用信金额
+                                                            {{else}}
+                                                            放款金额不符合用信金额
+                                                            {{/if}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                </td>
+                                            {{/if}}
                                         </tr>
                                         <tr class="tr tr-even">
                                             <th class="th w15">币种</th>
@@ -204,7 +242,7 @@
                                             <%=diffTpl2('$value.nlp_compare_bizRate', false)%>
                                         </tr>
                                         <tr class="tr">
-                                            <th class="th w15">利率浮动比例</th>
+                                            <th class="th w15">利率浮动</th>
                                             <td class="td w35">{{#nlpData2($value.nlp_rateFloat)}}</td>
                                             <td class="td w35">{{#nlpData3(percent($value.RATEFLOAT))}}</td>
                                             <%=diffTpl2('$value.nlp_compare_rateFloat', false)%>
@@ -253,7 +291,7 @@
                         <div class="customer-code-group">
                             <div class="customer-code" id="pingji-customer-code">客户编号：{{$value.o_customerID}}</div>
                         </div>
-                        <div class="sub-title">原始意见</div>
+                        <div class="sub-title">评级意见</div>
                         <div class="text-box">
                             {{#$value.o_phaseOpinion}}
                         </div>
@@ -271,7 +309,7 @@
                                 </thead>
                                 <tbody>
                                     <tr class="tr tr-even">
-                                        <td class="td w40">{{$value.o_customerName}}</td>
+                                        <td class="td w40">{{$value.__customerName}}</td>
                                         <td class="td w15">{{#nlpData2($value.nlp_evaluate)}}</td>
                                         <td class="td w15">{{#nlpData3($value.o_evaluateResult)}}</td>
                                         <td class="td w15">{{#nlpData3($value.o_cognResult)}}</td>
@@ -292,6 +330,7 @@
                         {{/if}}
                     </script>
                 </div>
+
                 <div class="card-wrap">
                     <div class="card card-container" id="nanjing2"></div>
                     <script type="text/html" id="nanjing2-tpl">
@@ -305,9 +344,8 @@
                             </div>
                             <div class="customer-code-group">
                                 <div class="customer-code">额度编号: {{$value.o_lineId}}</div>
-                                <div class="customer-code">授信申请流水号: {{$value.o_approveId}}</div>
                             </div>
-                            <div class="sub-title">原始意见</div>
+                            <div class="sub-title">授信意见</div>
                             <div class="text-box">
                                 {{#$value.o_phaseOpinion}}
                             </div>
@@ -350,11 +388,13 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <%= require('./relation.ejs')() %>
                         </div>
                         {{/if}}
                         {{/each}}
                     </script>
                 </div>
+
                 <div class="card-wrap">
                     <div class="card card-container" id="nanjing3"></div>
                     <script type="text/html" id="nanjing3-tpl">
@@ -367,9 +407,9 @@
                                 </h3>
                             </div>
                             <div class="customer-code-group">
-                                <div class="customer-code">申请流水号: {{$value.o_approveId}}</div>
+                                <div class="customer-code">额度编号: {{$value.o_lineId}}</div>
                             </div>
-                            <div class="sub-title">原始意见</div>
+                            <div class="sub-title">授信调整意见</div>
                             <div class="text-box">
                                 {{#$value.o_phaseOpinion}}
                             </div>
@@ -378,45 +418,47 @@
                                 <table class="table table-normal">
                                     <thead class="thead">
                                         <tr class="tr">
-                                            <th class="th w25">调整业务要素</th>
+                                            <th class="th w25">业务要素</th>
                                             <th class="th w25">语义解析</th>
-                                            <th class="th w25">原始授信</th>
-                                            <th class="th w25">调整后</th>
+                                            <th class="th w25">信贷</th>
+                                            <th class="th w25">是否一致</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr class="tr tr-even">
-                                            <th class="th w25">额度类型</th>
-                                            <td class="td w25">{{#nlpData2($value.nlp_businessTypeCLName)}}</td>
-                                            <td class="td w25"></td>
-                                            <td class="td w25">{{#nlpData3($value.o_clTypeName)}}</td>
-                                        </tr>
-                                        <tr class="tr tr-even">
-                                            <th class="th w25">额度</th>
-                                            <td class="td w25">{{#nlpData2($value.nlp_businessSum)}}</td>
-                                            <td class="td w25"></td>
-                                            <td class="td w25">{{#nlpData3(money($value.o_lineSum))}}</td>
+                                            <th class="th w15">额度类型</th>
+                                            <td class="td w35">{{#nlpData2($value.nlp_businessTypeCLName)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.o_clTypeName)}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_bizTypeCL', false)%>
                                         </tr>
                                         <tr class="tr">
-                                            <th class="th w25">期限</th>
-                                            <td class="td w25">{{#nlpData2($value.nlp_term)}}</td>
-                                            <td class="td w25"></td>
-                                            <td class="td w25">{{#nlpData3($value.o_term)}}</td>
+                                            <th class="th w15">授信额度金额</th>
+                                            <td class="td w35">{{#nlpData2($value.nlp_businessSum)}}</td>
+                                            <td class="td w35">{{#nlpData3(money($value.o_lineSum))}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_bizSum', false)%>
                                         </tr>
                                         <tr class="tr tr-even">
-                                            <th class="th w25">担保方式</th>
-                                            <td class="td w25">{{#nlpData2($value.nlp_vouchTypeName)}}</td>
-                                            <td class="td w25"></td>
-                                            <td class="td w25">{{#nlpData3($value.o_vouchTypeName)}}</td>
+                                            <th class="th w15">期限</th>
+                                            <td class="td w35">{{#nlpData2($value.nlp_term)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.o_term)}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_term', false)%>
+                                        </tr>
+                                        <tr class="tr">
+                                            <th class="th w15">主要担保方式</th>
+                                            <td class="td w35">{{#nlpData2($value.nlp_vouchTypeName)}}</td>
+                                            <td class="td w35">{{#nlpData3($value.o_vouchTypeName)}}</td>
+                                            <%=diffTpl2('$value.nlp_compare_vouchType', '$value.nlp_remark_vouchType')%>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
+                            <%= require('./relation.ejs')() %>
                         </div>
                         {{/if}}
                         {{/each}}
                     </script>
                 </div>
+
                 <div class="card-wrap">
                     <div class="card card-container" id="nanjing4"></div>
                     <script type="text/html" id="nanjing4-tpl">
@@ -430,9 +472,10 @@
                             </div>
                             <div class="customer-code-group">
                                 <div class="customer-code">额度编号: {{$value.o_pLineID}}</div>
-                                <div class="customer-code">用信编号: {{$value.o_approveId}}</div>
+                                <div class="customer-code">用信流水号: {{$value.o_applyId}}</div>
+                                <div class="customer-code">借据流水号: {{$value.e_duebillID}}</div>
                             </div>
-                            <div class="sub-title">原始意见</div>
+                            <div class="sub-title">用信意见</div>
                             <div class="text-box">
                                 {{#$value.o_phaseOpinion}}
                             </div>
@@ -457,7 +500,7 @@
                                         <tr class="tr">
                                             <th class="th w15">申请金额</th>
                                             <td class="td w35">{{#nlpData2($value.nlp_businessSum)}}</td>
-                                            <td class="td w35">{{#nlpData3(money($value.o_businessSum))}}</td>
+                                            <td class="td w35">{{#nlpData3(money($value.o_businessSum, $value.o_businessCurrencyName))}}</td>
                                             <%=diffTpl2('$value.nlp_compare_bizSum', false)%>
                                         </tr>
                                         <tr class="tr tr-even">
@@ -491,7 +534,7 @@
                                             <%=diffTpl2('$value.nlp_compare_bizRate', false)%>
                                         </tr>
                                         <tr class="tr">
-                                            <th class="th w15">利率浮动比例</th>
+                                            <th class="th w15">利率浮动</th>
                                             <td class="td w35">{{#nlpData2($value.nlp_rateFloat)}}</td>
                                             <td class="td w35">{{#nlpData3(percent($value.o_rateFloat))}}</td>
                                             <%=diffTpl2('$value.nlp_compare_rateFloat', false)%>
@@ -529,6 +572,7 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <%= require('./relation.ejs')() %>
                         </div>
                         {{/if}}
                         {{/each}}

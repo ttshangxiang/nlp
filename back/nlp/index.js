@@ -182,6 +182,7 @@ router.get('/uncleared', function (req, res, next) {
     var contractId = req.query.contractId;
     var putoutID = req.query.putoutID;
     var businessType = req.query.businessType;
+    var stemp = req.query.stemp;
 
     var offset = req.query.offset;
     var count = req.query.count;
@@ -449,45 +450,51 @@ router.get('/yongXinVSFangKuanSub', function (req, res, next) {
 
 // 后台解析版本
 router.get('/jiexi2', function (req, res, next) {
-    getPingji2(req.query.company).then(function (data) {
-        var customerId = null;
-        var customerName = req.query.company;
-        if (data === 'error') {
-            data = 'query database faild';
-        } else if (data.length === 0) {
-            data = 'not found';
-        } else {
-            customerId = data[0].customerID;
-        }
-        Promise.all([
-            getShouxin2(customerId, customerName),
-            getShouxintiaozheng2(customerId, customerName),
-            getYongxin2(customerId, customerName),
-            getX(customerId, customerName),
-            getY(customerId, customerName)
-        ]).then(function (values) {
-            values.unshift(data);
-            res.status(200).send({status: 0, data: values});
-        });
+    var customerId = req.query.customerId;
+    var customerName = req.query.customerName;
+    Promise.all([
+        getPingji2(customerId, customerName),
+        getShouxin2(customerId, customerName),
+        getShouxintiaozheng2(customerId, customerName),
+        getYongxin2(customerId, customerName),
+        getX(customerId, customerName),
+        getY(customerId, customerName)
+    ]).then(function (data) {
+        res.status(200).send({status: 0, data: data});
     });
 });
 
 // 获取新版评级
-function getPingji2 (customerName) {
+function getPingji2 (customerId, customerName) {
+    var where = ' a.customerName = "' + customerName + '"';
+    if (customerId) {
+        where = ' a.customerID ="' + customerId + '"';
+    }
     var p = new Promise(function (resolve, reject) {
-        var where = ' c.customerName = "' + customerName + '"';
         var selectSQL =
         `select c.customerName as o_customerName, c.evaluateResult as o_evaluateResult, c.cognResult as o_cognResult, c.customerID as o_customerID,
-        a.nlp_phaseOpinion as o_nlpPhaseOpinion, a.phaseOpinion as o_phaseOpinion, a.*, b.* from nlp_evaluate_info c
+        c.nlpPhaseOpinion as o_nlpPhaseOpinion, c.phaseOpinion as o_phaseOpinion, a.*, b.* from nlp_evaluate_info c
         LEFT JOIN nlp_check_elements_info b ON c.customerID = b.customerID
         LEFT JOIN nlp_unstrured_info a ON c.customerID = a.customerID
-        WHERE ${where} limit 1`;
+        WHERE ${where} order by c.endTime`;
         db.find(selectSQL, function (data) {
             if (data === 'error') {
-                resolve('error');
+                resolve('query database faild');
                 return;
             }
-            resolve(_.uniqBy(data, 'o_customerID'));
+
+            var arr = _.chain(data)
+            .filter(function (o) {
+                return _.includes(o.o_nlpPhaseOpinion, '客户评级');
+            })
+            .value();
+
+            var first = arr[0] || data[0];
+            if (first) {
+                resolve([first]);
+            } else {
+                resolve([]);
+            }
         });
     });
     return p;
@@ -504,7 +511,8 @@ function getShouxin2 (customerId, customerName) {
         var selectSQL =
         `select c.lineId as o_lineId, c.approveId as o_approveId, c.clTypeName as o_clTypeName, c.businessTypeName as o_businessTypeName,
         c.lineSum as o_lineSum, c.vouchTypeName as o_vouchTypeName, c.customerID as o_customerID, c.termMonth as o_termMonth, c.termDay as o_termDay,
-        a.nlp_phaseOpinion as o_nlpPhaseOpinion, a.phaseOpinion as o_phaseOpinion, a.lineEffFlag as o_lineEffFlag, a.*, b.* from nlp_unstrured_info a
+        a.nlp_phaseOpinion as o_nlpPhaseOpinion, a.phaseOpinion as o_phaseOpinion, a.lineEffFlag as o_lineEffFlag,
+        a.applyId as o_applyId, a.*, b.* from nlp_unstrured_info a
         LEFT JOIN nlp_check_elements_info b ON a.lineId = b.lineId
         LEFT JOIN nlp_cl_info c ON a.lineId = c.lineId
         WHERE ${where}`;
@@ -530,7 +538,8 @@ function getShouxintiaozheng2 (customerId, customerName) {
         var selectSQL =
         `select c.lineId as o_lineId, c.approveId as o_approveId, c.clTypeName as o_clTypeName, c.businessTypeName as o_businessTypeName,
         c.lineSum as o_lineSum, c.termMonth as o_termMonth, c.vouchTypeName as o_vouchTypeName, c.customerID as o_customerID,
-        a.nlp_phaseOpinion as o_nlpPhaseOpinion, a.phaseOpinion as o_phaseOpinion, a.lineEffFlag as o_lineEffFlag, a.*, b.* from nlp_unstrured_info a
+        a.nlp_phaseOpinion as o_nlpPhaseOpinion, a.phaseOpinion as o_phaseOpinion, a.lineEffFlag as o_lineEffFlag,
+        a.appyId as o_applyId, a.*, b.* from nlp_unstrured_info a
         LEFT JOIN nlp_check_elements_info b ON a.lineId = b.lineId
         LEFT JOIN nlp_modify_cl_info c ON a.lineId = c.lineId
         WHERE ${where}`;
@@ -558,7 +567,8 @@ function getYongxin2 (customerId, customerName) {
         c.businessSum as o_businessSum, c.businessCurrencyName as o_businessCurrencyName, c.termDay as o_termDay, c.termMonth as o_termMonth, 
         c.corpuspayMethodName as o_corpuspayMethodName, c.payModeName as o_payModeName, c.businessRate as o_businessRate, c.rateFloat as o_rateFloat,
         c.bailRatio as o_bailRatio, c.bailSum as o_bailSum, c.pdgSum as o_pdgSum, c.vouchTypeName as o_vouchTypeName, c.purpose as o_purpose,
-        a.nlp_phaseOpinion as o_nlpPhaseOpinion, a.phaseOpinion as o_phaseOpinion, c.customerID as o_customerID, a.*, b.* from nlp_unstrured_info a
+        a.nlp_phaseOpinion as o_nlpPhaseOpinion, a.phaseOpinion as o_phaseOpinion, c.customerID as o_customerID, c.businessType as o_businessType,
+        a.appyId as o_applyId, a.*, b.* from nlp_unstrured_info a
         LEFT JOIN nlp_check_elements_info b ON a.approveId = b.approveId
         LEFT JOIN nlp_approve_info c ON a.approveId = c.approveId
         WHERE ${where}`;
@@ -642,5 +652,113 @@ function getY (customerId, customerName) {
     });
     return p;
 }
+
+// 核对结果导出
+router.get('/check_result', function (req, res, next) {
+
+    var offset = req.query.offset;
+    var count = req.query.count;
+
+    var limitStr = '';
+    if (count) {
+        limitStr += ' limit ' + count;
+    }
+    if (offset) {
+        limitStr += ' offset ' + offset;
+    }
+
+    var identify = req.query.identify;
+    
+    var where = '';
+    if (identify) {
+        where += 'and nlp_identify = "' + identify + '"';
+    }
+
+    // 查询总数
+    var p = new Promise(function (resolve, reject) {
+        var querySQL = `
+            select count(*) as total_count from (
+                select case when
+                   nlp_compare_evaluate = 0     -- 评级结果是否一致',
+                or nlp_compare_bizType = 0      -- 业务品种/业务名称是否一致
+                or nlp_compare_bizTypeCL = 0    -- 额度类型是否一致
+                or nlp_compare_bizSum = 0       -- 金额是否一致
+                or nlp_compare_term = 0         -- 期限是否一致
+                or nlp_compare_bizRate = 0      -- 执行年利率是否一致
+                or nlp_compare_rateFloat = 0    -- 利率浮动是否一致
+                or nlp_compare_rateMondify = 0  -- 利率调整方式是否一致
+                or nlp_compare_corpMet = 0      -- 还款方式是否一致
+                or nlp_compare_payMode = 0      -- 支付方式是否一致
+                or nlp_compare_purpose = 0      -- 用途是否一致
+                or nlp_compare_pdgSum = 0       -- 手续费是否一致
+                or nlp_compare_benefitCorp = 0  -- 受益人是否一致
+                or nlp_compare_gathering = 0    -- 收款人是否一致
+                or nlp_compare_lcType = 0       -- 信用证类型是否一致
+                or nlp_compare_contractMax = 0  -- 最高额合同是否一致
+                or nlp_compare_keyItems = 0     -- 重点事项是否一致
+                or nlp_compare_bailSum = 0      -- 保证金是否一致
+                or nlp_compare_bailRatio = 0    -- 保证金比例是否一致
+                or nlp_compare_vouchType = 0    -- 主要担保方式是否一致
+                or nlp_compare_bizCurrency = 0  -- 币种是否一致
+                then 0 else 1 end as yNoflag, a.*
+                from nlp_check_elements_info a
+            ) b where yNoflag = 0 ${where}`;
+        db.find(querySQL, function (data) {
+            if (data === 'error') {
+                resolve('error');
+                return;
+            }
+            resolve(data);
+        });
+    });
+
+    p.then(function (total_count) {
+        if (total_count === 'error') {
+            res.status(500).send('query database faild');
+            return;
+        }
+        var querySQL = `
+            select * from (
+                select case when
+                nlp_compare_evaluate = 0     -- 评级结果是否一致',
+                or nlp_compare_bizType = 0      -- 业务品种/业务名称是否一致
+                or nlp_compare_bizTypeCL = 0    -- 额度类型是否一致
+                or nlp_compare_bizSum = 0       -- 金额是否一致
+                or nlp_compare_term = 0         -- 期限是否一致
+                or nlp_compare_bizRate = 0      -- 执行年利率是否一致
+                or nlp_compare_rateFloat = 0    -- 利率浮动是否一致
+                or nlp_compare_rateMondify = 0  -- 利率调整方式是否一致
+                or nlp_compare_corpMet = 0      -- 还款方式是否一致
+                or nlp_compare_payMode = 0      -- 支付方式是否一致
+                or nlp_compare_purpose = 0      -- 用途是否一致
+                or nlp_compare_pdgSum = 0       -- 手续费是否一致
+                or nlp_compare_benefitCorp = 0  -- 受益人是否一致
+                or nlp_compare_gathering = 0    -- 收款人是否一致
+                or nlp_compare_lcType = 0       -- 信用证类型是否一致
+                or nlp_compare_contractMax = 0  -- 最高额合同是否一致
+                or nlp_compare_keyItems = 0     -- 重点事项是否一致
+                or nlp_compare_bailSum = 0      -- 保证金是否一致
+                or nlp_compare_bailRatio = 0    -- 保证金比例是否一致
+                or nlp_compare_vouchType = 0    -- 主要担保方式是否一致
+                or nlp_compare_bizCurrency = 0  -- 币种是否一致
+                then 0 else 1 end as yNoflag, a.*
+                from nlp_check_elements_info a
+            ) b where yNoflag = 0 ${where}
+            order by nlp_identify ${limitStr}`;
+        db.find(querySQL, function (data) {
+            if (data === 'error') {
+                res.status(500).send('query database faild');
+                return;
+            }
+            res.status(200).send({
+                status: 0,
+                data: {
+                    data: data,
+                    total_count: total_count[0].total_count
+                }
+            });
+        });
+    });
+})
 
 module.exports = router;

@@ -29,7 +29,8 @@ var renderPage = function (list, total, msg) {
         data: list,
         total: total,
         msg: msg,
-        pageSize: query.count
+        pageSize: query.count,
+        indexStart: query.count * query.page
     }));
 };
 
@@ -42,10 +43,9 @@ var getParam = function () {
         var $el = $(this);
         var value = $el.val();
         if (value) {
-            param[$el.attr('name')] = value
+            param[$el.attr('name')] = $.trim(value);
         }
     });
-
     return param;
 };
 
@@ -134,20 +134,27 @@ $(function () {
 
     $('#card-1 input, #card-1 select').change(function () {
         var url = '/api/export/uncleared';
-        var query = '';
+        var queryStr = '';
         $('#card-1 input, #card-1 select').each(function () {
             var $el = $(this);
             var value = $el.val();
             if (value) {
-                query += '&' + $el.attr('name') + '=' + value;
+                queryStr += '&' + $el.attr('name') + '=' + $.trim(value);
             }
         });
-        if (query) {
-            url += '?' + query.substr(1);
+        if (queryStr) {
+            url += '?' + queryStr.substr(1);
         }
         $('#export-uncleared').attr('href', url);
+        if ($(this).attr('id') == 'businessType') {
+            $('#nlp-uncleared-query').click();
+        }
     });
 
-    getUnCleared();
-    getBusinessType();
+    $('#card-1 input').keyup(function (e) {
+        if (e.keyCode == 13) {
+            $('#nlp-uncleared-query').click();
+        }
+    });
+
 });

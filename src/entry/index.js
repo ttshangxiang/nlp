@@ -16,7 +16,11 @@ $(function () {
     var init3 = require('../page/data_count');
     var init4 = require('../page/yongxin_shouxin');
     var init5 = require('../page/yongxin_fangkuan');
+    var init6 = require('../page/check_result');
 
+    // 默认
+    $('#card-6').removeClass('hide');
+    init6('Y');
     $('#tree a.tree-text').click(function () {
         var $this = $(this);
         var id = $this.attr('data-for');
@@ -35,6 +39,10 @@ $(function () {
         }
         if (id === 'card-5') {
             init5();
+        }
+        if (id === 'card-6') {
+            var type = $this.attr('data-type');
+            init6(type);
         }
     });
 });

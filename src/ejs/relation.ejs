@@ -1,0 +1,23 @@
+{{if $value.relation && $value.relation.length > 0}}
+<div class="sub-title">关联关系</div>
+<div class="content">
+    <table class="table table-normal">
+        <thead class="thead">
+            <tr class="tr">
+                <th class="th w25">关联关系</th>
+                <th class="th w75">关联实体</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{each $value.relation as r i}}
+            <tr class="tr {{if i%2 == 0}}tr-even{{/if}}">
+                {{if r.rowspan }}
+                <th class="th w25" rowspan="{{r.rowspan}}">{{r.key}}</th>
+                {{/if}}
+                <td class="td w75">{{r.value}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+{{/if}}

@@ -30,7 +30,8 @@ var renderPage = function (list, total, msg) {
         data: list,
         total: total,
         msg: msg,
-        pageSize: query.count
+        pageSize: query.count,
+        indexStart: query.count * query.page
     }));
 };
 
@@ -43,7 +44,7 @@ var getParam = function () {
         var $el = $(this);
         var value = $el.val();
         if (value) {
-            param[$el.attr('name')] = value
+            param[$el.attr('name')] = $.trim(value);
         }
     });
     return param;

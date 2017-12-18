@@ -65,28 +65,27 @@ var renderTree = function (data, node) {
 
 // 渲染评级
 var renderNanjin1 = function (data) {
-    $('#nanjing1').html(template('nanjing1-tpl', data));
+    $('#nanjing1').html(template('nanjing1-tpl', data).replace(/td>\s+<td/g, 'td><td'));
 };
 // 渲染授信
 var renderNanjin2 = function (data) {
-    $('#nanjing2').html(template('nanjing2-tpl', data));
+    $('#nanjing2').html(template('nanjing2-tpl', data).replace(/td>\s+<td/g, 'td><td'));
 };
 // 渲染授信调整
 var renderNanjin3 = function (data) {
-    $('#nanjing3').html(template('nanjing3-tpl', data));
+    $('#nanjing3').html(template('nanjing3-tpl', data).replace(/td>\s+<td/g, 'td><td'));
 };
 // 渲染用信
 var renderNanjin4 = function (data) {
-    $('#nanjing4').html(template('nanjing4-tpl', data));
+    $('#nanjing4').html(template('nanjing4-tpl', data).replace(/td>\s+<td/g, 'td><td'));
 };
 // 渲染用信与放款核对
 var renderNanjinX = function (data) {
-    $('#nanjingX').html(template('nanjingX-tpl', data));
+    $('#nanjingX').html(template('nanjingX-tpl', data).replace(/td>\s+<td/g, 'td><td'));
 };
-
 // 渲染用信与授信核对
 var renderNanjinY = function (data) {
-    $('#nanjingY').html(template('nanjingY-tpl', data));
+    $('#nanjingY').html(template('nanjingY-tpl', data).replace(/td>\s+<td/g, 'td><td'));
 };
 
 // 渲染所有
@@ -97,25 +96,33 @@ var renderAll = function (obj) {
     renderNanjin2({list: obj.shouxin});
     renderNanjin3({list: obj.tiaozheng});
     renderNanjin4({list: obj.yongxin});
-    renderNanjinX({list: obj.X});
     renderNanjinY({list: obj.Y});
+    renderNanjinX({list: obj.X});
 };
 
-var companyid = window.location.href.split('name=')[1];
-if (companyid) {
-    companyid = decodeURIComponent(companyid);
-    document.title = companyid + ' - 信贷语义识别';
-    $('.company-name').text(companyid);
+function GetQueryString(name){
+    var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if(r!=null)return  decodeURI(r[2]); return null;
 }
+
+var customerName = GetQueryString('name');
+if (customerName) {
+    customerName = decodeURIComponent(customerName);
+    document.title = customerName + ' - 信贷语义识别';
+    $('.company-name').text(customerName);
+}
+var customerId = GetQueryString('customerId');
 
 // 数据结构化
 var dataConvert = function (data) {
     var obj = {};
+    var duebillIDMap = {};
     obj.pingji = diffPingji(data[0]);
     obj.shouxin = diffShouxin(data[1]);
     obj.tiaozheng = diffTiaozheng(data[2]);
-    obj.yongxin = diffYongxin(data[3]);
-    obj.X = diffX(data[4]);
+    obj.X = diffX(data[4], duebillIDMap);
+    obj.yongxin = diffYongxin(data[3], duebillIDMap);
     obj.Y = diffY(data[5]);
     var shouxin = obj.shouxin;
     var yongxin = obj.yongxin;
@@ -155,14 +162,8 @@ var dataConvert = function (data) {
     if (obj.yongxin[0] && !obj.customerID) {
         obj.customerID = obj.yongxin[0].o_customerID;
     }
-    if (obj.X[0] && !obj.customerID) {
-        obj.customerID = obj.X[0].o_customerID;
-    }
-    if (obj.Y[0] && !obj.customerID) {
-        obj.customerID = obj.Y[0].o_customerID;
-    }
     obj.tree = {
-        text: companyid,
+        text: customerName,
         _id: '',
         children: [
             obj.pingji[0],
@@ -182,7 +183,7 @@ var dataConvert = function (data) {
                 children: shouxin
             },
             {
-                text: '授信调整' + (tiaozheng ? '' : '(无数据)'),
+                text: '授信调整' + (tiaozheng ? '(授信额度: ' + tiaozheng[0].totalMoney + ')' : '(无数据)'),
                 _id: 'nanjing3',
                 children: tiaozheng
             },
@@ -209,7 +210,8 @@ var diffPingji = function (list) {
         obj.text = '评级(无数据)';
         $('#nanjing1_url').addClass('disable');
     }
-    obj.o_phaseOpinion = addColor(obj.o_nlpPhaseOpinion, obj.o_phaseOpinion);
+    obj.o_phaseOpinion = addColor([obj.nlp_evaluate], obj.o_phaseOpinion);
+    obj.__customerName = customerName;
     return list;
 };
 var diffShouxin = function (list) {
@@ -224,22 +226,25 @@ var diffShouxin = function (list) {
         obj.text = obj.o_businessTypeName || ('授信' + (i + 1));
         obj.title = '授信' + (i + 1) + '-' + (obj.o_businessTypeName || '');
         if (obj.o_lineEffFlag && obj.o_lineEffFlag == '2') {
-            obj.text += '(生效中)';
-            obj.title += '(生效中)';
+            obj.text += '(有效)';
+            obj.title += '(有效)';
         } else {
-            obj.text += '(已失效)';
-            obj.title += '(已失效)';
+            obj.text += '(失效)';
+            obj.title += '(失效)';
         }
         totalMoney += parseFloat(obj.nlp_bizSum) || 0;
         obj.o_term = getTerm(obj.o_termMonth, obj.o_termDay);
+        obj.o_phaseOpinion = addColor([
+            obj.nlp_vouchTypeName,
+            obj.nlp_businessTypeCLName,
+            obj.nlp_businessSum,
+            obj.nlp_term
+        ], obj.o_phaseOpinion);
         try {
-            var arr = JSON.parse(obj.o_nlpPhaseOpinion);
-            obj.json = {};
-            if (arr[0] && arr[0]['业务要素'] && arr[0]['业务要素'][0]) {
-                obj.json = arr[0]['业务要素'][0];
+            if (obj.nlp_guarantyEntity && obj.nlp_guarantyEntity !== 'Null') {
+                obj.relation = getRelation(JSON.parse(obj.nlp_guarantyEntity));
             }
-            obj.o_phaseOpinion = addColor(obj.json, obj.o_phaseOpinion);
-        } catch (error) {
+        } catch (e) {
         }
     }
     list[0].totalMoney = Math.round((totalMoney / 10000)) + '万元';
@@ -249,6 +254,7 @@ var diffTiaozheng = function (list) {
     if (typeof list === 'string' || list.length === 0) {
         list = [{empty: true}];
     }
+    var totalMoney = 0;
     for (var i = 0; i < list.length; i++) {
         var obj = list[i];
         obj.json = {};
@@ -256,26 +262,31 @@ var diffTiaozheng = function (list) {
         obj.text = obj.o_businessTypeName || ('授信调整' + (i + 1));
         obj.title = '授信调整' + (i + 1) + '-' + (obj.o_businessTypeName || '');
         if (obj.o_lineEffFlag && obj.o_lineEffFlag == '2') {
-            obj.text += '(生效中)';
-            obj.title += '(生效中)';
+            obj.text += '(有效)';
+            obj.title += '(有效)';
         } else {
-            obj.text += '(已失效)';
-            obj.title += '(已失效)';
+            obj.text += '(失效)';
+            obj.title += '(失效)';
         }
+        totalMoney += parseFloat(obj.nlp_bizSum) || 0;
         obj.o_term = getTerm(obj.o_termMonth, obj.o_termDay);
+        obj.o_phaseOpinion = addColor([
+            obj.nlp_vouchTypeName,
+            obj.nlp_businessTypeCLName,
+            obj.nlp_businessSum,
+            obj.nlp_term
+        ], obj.o_phaseOpinion);
         try {
-            var arr = JSON.parse(obj.o_nlpPhaseOpinion);
-            obj.json = {};
-            if (arr[0] && arr[0]['业务要素']) {
-                obj.json = arr[0]['业务要素'];
+            if (obj.nlp_guarantyEntity && obj.nlp_guarantyEntity !== 'Null') {
+                obj.relation = getRelation(JSON.parse(obj.nlp_guarantyEntity));
             }
-            obj.o_phaseOpinion = addColor(obj.json, obj.o_phaseOpinion);
-        } catch (error) {
+        } catch (e) {
         }
     }
+    list[0].totalMoney = Math.round((totalMoney / 10000)) + '万元';
     return list;
 };
-var diffYongxin = function (list) {
+var diffYongxin = function (list, duebillIDMap) {
     if (typeof list === 'string' || list.length === 0) {
         list = [{empty: true}];
     }
@@ -288,21 +299,45 @@ var diffYongxin = function (list) {
         obj.title = '用信' + (i + 1) + '-' + (obj.o_businessTypeName || '');
         obj.o_term = getTerm(obj.o_termMonth, obj.o_termDay);
         totalMoney += parseFloat(obj.nlp_bizSum) || 0;
+        obj.o_phaseOpinion = addColor([
+            obj.nlp_vouchTypeName,
+            obj.nlp_purpose,
+            obj.nlp_businessTypeName,
+            obj.nlp_businessSum,
+            obj.nlp_businessCurrencyName,
+            obj.nlp_term,
+            obj.nlp_corpuspayMethodName,
+            obj.nlp_payModeName,
+            obj.nlp_businessRate,
+            obj.nlp_rateFloat,
+            obj.nlp_bailRatio,
+            obj.nlp_bailSum,
+            obj.nlp_pdgSum
+        ], obj.o_phaseOpinion);
+        obj.e_duebillID = duebillIDMap[obj.o_applyId] || '';
+        // if (obj.o_businessType && obj.o_businessType[0]) {
+        //     if (obj.o_businessType[0] == '1') {
+        //         obj.o_bailRatio = '';
+        //         obj.o_bailSum = '';
+        //         obj.o_pdgSum = '';
+        //     }
+        //     if (obj.o_businessType[0] == '2') {
+        //         obj.o_businessRate = '';
+        //         obj.o_rateFloat = '';
+        //     }
+        // }
         try {
-            var arr = JSON.parse(obj.o_nlpPhaseOpinion);
-            obj.json = {};
-            if (arr[0] && arr[0]['业务要素']) {
-                obj.json = arr[0]['业务要素'];
+            if (obj.nlp_guarantyEntity && obj.nlp_guarantyEntity !== 'Null') {
+                obj.relation = getRelation(JSON.parse(obj.nlp_guarantyEntity));
             }
-            obj.o_phaseOpinion = addColor(obj.json, obj.o_phaseOpinion);
-        } catch (error) {
+        } catch (e) {
         }
     }
     list[0].totalMoney = Math.round((totalMoney / 10000)) + '万元';
     return list;
 };
 
-var diffX = function (list) {
+var diffX = function (list, duebillIDMap) {
     if (typeof list === 'string' || list.length === 0) {
         list = [{empty: true}];
     }
@@ -313,21 +348,40 @@ var diffX = function (list) {
         if (!obj.nlp_businessTypeName || obj.nlp_businessTypeName == 'Null') {
             obj.nlp_businessTypeName = '';
         }
-        obj.nlp_businessTypeName = obj.nlp_businessTypeName.replace('&&', ',');
-        obj.text = obj.nlp_businessTypeName || ('用信与放款核对' + (i + 1));
-        obj.title = '用信与放款核对' + (i + 1) + '-' + (obj.nlp_businessTypeName || '');
-        try {
-            var arr = JSON.parse(obj.nlp_PhaseOpinion);
-            obj.json = {};
-            if (arr[0] && arr[0]['业务要素']) {
-                obj.json = arr[0]['业务要素'];
-            }
-            obj.phaseOpinion = addColor(obj.json, obj.phaseOpinion);
-        } catch (error) {
+        if (!obj.e_businessTypeName || obj.e_businessTypeName == 'Null') {
+            obj.e_businessTypeName = '';
         }
+        obj.phaseOpinion = addColor([
+            obj.nlp_vouchTypeName,
+            obj.nlp_purpose,
+            obj.nlp_businessTypeName,
+            obj.nlp_businessSum,
+            obj.nlp_businessCurrencyName,
+            obj.nlp_corpuspayMethodName,
+            obj.nlp_payModeName,
+            obj.nlp_businessRate,
+            obj.nlp_rateFloat,
+            obj.nlp_bailRatio,
+            obj.nlp_pdgSum
+        ], obj.phaseOpinion);
+        // if (obj.o_businessType && obj.o_businessType[0]) {
+        //     if (obj.o_businessType[0] == '1') {
+        //         obj.BAILRATIO = '';
+        //         obj.PDGSUM = '';
+        //     }
+        //     if (obj.o_businessType[0] == '2') {
+        //         obj.BUSINESSRATE = '';
+        //         obj.RATEFLOAT = '';
+        //     }
+        // }
+        obj.nlp_businessTypeName = obj.nlp_businessTypeName.replace(/\&\&/g, ',');
+        obj.text = obj.e_businessTypeName || ('用信与放款核对' + (i + 1));
+        obj.title = '用信与放款核对' + (i + 1) + '-' + (obj.e_businessTypeName || '');
+        duebillIDMap[obj.applyId] = obj.e_duebillID;
     }
     return list;
 };
+
 var diffY = function (list) {
     if (typeof list === 'string' || list.length === 0) {
         list = [{empty: true}];
@@ -339,36 +393,25 @@ var diffY = function (list) {
         if (!obj.b_nlp_businessTypeName || obj.b_nlp_businessTypeName == 'Null') {
             obj.b_nlp_businessTypeName = '';
         }
-        obj.b_nlp_businessTypeName = obj.b_nlp_businessTypeName.replace('&&', ',');
+        obj.b_nlp_businessTypeName = obj.b_nlp_businessTypeName.replace(/\&\&/g, ',');
         if (!obj.c_nlp_businessTypeName || obj.c_nlp_businessTypeName == 'Null') {
             obj.c_nlp_businessTypeName = '';
         }
+        obj.b_phaseOpinion = addColor([
+            obj.b_nlp_vouchTypeName,
+            obj.b_nlp_purpose,
+            obj.b_nlp_businessTypeName,
+            obj.b_nlp_businessSum
+        ], obj.b_phaseOpinion);
+        obj.c_phaseOpinion = addColor([
+            obj.c_nlp_vouchTypeName,
+            obj.c_nlp_purpose,
+            obj.c_nlp_businessTypeName,
+            obj.c_nlp_businessSum
+        ], obj.c_phaseOpinion);
         obj.c_nlp_businessTypeName = obj.c_nlp_businessTypeName.replace('&&', ',');
         obj.text = obj.b_nlp_businessTypeName || ('授信与用信核对' + (i + 1));
         obj.title = '授信与用信核对' + (i + 1) + '-' + (obj.b_nlp_businessTypeName || '');
-        try {
-            var arr = JSON.parse(obj.b_nlp_PhaseOpinion);
-            obj.json = {};
-            if (arr[0] && arr[0]['业务要素']) {
-                obj.json = arr[0]['业务要素'];
-            }
-            obj.b_phaseOpinion = addColor(obj.json, obj.b_phaseOpinion);
-
-            var arr2 = JSON.parse(obj.c_nlp_PhaseOpinion);
-            obj.json2 = {};
-            // 授信和授信调整的json结构不同
-            if (obj.c_nlp_identify == 'B') {
-                if (arr2[0] && arr2[0]['业务要素'] && arr2[0]['业务要素'][0]) {
-                    obj.json2 = arr2[0]['业务要素'][0];
-                }
-            } else {
-                if (arr2[0] && arr2[0]['业务要素']) {
-                    obj.json2 = arr2[0]['业务要素'];
-                }
-            }
-            obj.c_phaseOpinion = addColor(obj.json2, obj.c_phaseOpinion);
-        } catch (error) {
-        }
     }
     return list;
 };
@@ -384,24 +427,23 @@ var getTerm = function (termMonth, termDay) {
 }
 
 // 染色
-var addColor = function (json, text) {
-    if (!json || !text) {
-        return text || '';
+var addColor = function (list, text) {
+    if (!text) {
+        return text | '';
     }
-    if (typeof json === 'string') {
-        return text.replace(json, '<span class="match-text">' + json + '</span>');
-    }
-    for (var i in json) {
-        if (json.hasOwnProperty(i)) {
-            for (var j = 0; j < json[i].length; j++) {
-                if (json[i][j]) {
-                    text = text.replace(json[i][j], '<span class="match-text">' + json[i][j] + '</span>');
-                }
-            }
+    for (var i = 0; i < list.length; i++) {
+        if (!list[i] && list[i] !== 0) {
+            continue;
+        }
+        var str = list[i] + '';
+        if (str.indexOf('&&') > -1) {
+            text = addColor(str.split('&&'), text);
+        } else {
+            text = text.replace(str, '<span class="match-text">' + str + '</span>');
         }
     }
     return text;
-};
+}
 
 var setCount = function () {
     $('.sub-card').each(function () {
@@ -413,11 +455,36 @@ var setCount = function () {
     });
 };
 
+var getRelation = function (obj) {
+    var list = [];
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            var item = obj[key];
+            for (var i = 0; i < item.length; i++) {
+                var text = item[i] + '';
+                var tr = {
+                    key: key,
+                    value: text.split('::')[0]
+                };
+                if (i == 0) {
+                    tr.rowspan = item.length;
+                }
+                list.push(tr);
+            }
+        }
+    }
+    return list;
+}
+
 // 拉取数据
 var loadData = function () {
     $('.detail-loading').show();
     util.ajax({
-        url: '/api/nanjing/jiexi2?company=' + companyid,
+        url: '/api/nanjing/jiexi2',
+        data: {
+            customerName: customerName,
+            customerId: customerId
+        },
         cache: false,
         dataType: 'json',
         success: function (res) {

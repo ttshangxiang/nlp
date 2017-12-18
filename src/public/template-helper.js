@@ -50,11 +50,17 @@ var convertMoney = function (num) {
 }
 
 // 金钱格式化
-template.helper('moneny', function (num) {
+template.helper('moneny', function (num, unity) {
     if (!num && num !== 0) {
         return '';
     }
-    return convertMoney(num) + '元';
+    if (unity == '人民币') {
+        unity = '元'
+    }
+    if (unity == '澳大利亚') {
+        unity = '澳元';
+    }
+    return convertMoney(num) + (unity || '元');
 });
 
 // 无提取数据
@@ -71,10 +77,67 @@ template.helper('nlpData3', function (nlp) {
     return nlp.replace(/\&\&/g, ',');
 });
 
-// 金钱格式化
+// 加元
 template.helper('moneny2', function (num) {
     if (!num && num !== 0) {
         return '';
     }
     return num + '元';
+});
+
+// 判断是否
+template.helper('shifou', function (num) {
+    if (num == 1) {
+        return '是';
+    }
+    if (num == 0) {
+        return '否';
+    }
+    if (num == 2 || num == 3) {
+        return '无解析数据';
+    }
+    return '';
+});
+
+// 阶段
+template.helper('jieduan', function (num) {
+    if (num == 'A') {
+        return '评级';
+    }
+    if (num == 'B') {
+        return '授信';
+    }
+    if (num == 'D') {
+        return '授信调整';
+    }
+    if (num == 'F') {
+        return '用信';
+    }
+    if (num == 'X') {
+        return '用信vs放款';
+    }
+    if (num == 'Y') {
+        return '授信vs用信';
+    }
+    return '';
+});
+
+// isNull
+template.helper('isNull', function (num) {
+    if (!num && num !== 0) {
+        return '';
+    }
+    num = num + '';
+    if (num.toUpperCase() === 'NULL') {
+        return '';
+    }
+    return num;
+});
+
+// match
+template.helper('match', function (type, str) {
+    if (!type) {
+        return true;
+    }
+    return str.indexOf(type) > 1;
 });

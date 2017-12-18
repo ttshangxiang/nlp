@@ -22,7 +22,9 @@ let config = Object.assign({}, baseConfig, {
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': '"production"'
         }),
-        new webpack.optimize.UglifyJsPlugin(),
+        new webpack.optimize.UglifyJsPlugin({
+            ie8: true
+        }),
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.optimize.AggressiveMergingPlugin(),
         new webpack.NoErrorsPlugin()

@@ -16,8 +16,6 @@ var showError = function (str) {
 
 var loadFail = showError();
 
-var chart1, chart2, chart3;
-
 var dataCovert = function (data) {
     var obj = {name: [], value: []};
     for (var i = 0; i < data.length; i++) {
@@ -28,133 +26,143 @@ var dataCovert = function (data) {
 };
 
 var renderCharts = function (id, data) {
-    var myChart = echarts.init(document.getElementById(id));
-    var option = {
-        color: ['#3398DB'],
-        tooltip : {
-            trigger: 'axis',
-            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-            }
-        },
-        grid: {
-            left: '3%',
-            right: '4%',
-            containLabel: true
-        },
-        xAxis : [{
-            type : 'category',
-            data : data.name,
-            axisTick: {
-                alignWithLabel: true
+    var newDom = util.resetChart(id);
+    setTimeout(function () {
+        var myChart = echarts.init(newDom[0]);
+        var option = {
+            color: ['#3398DB'],
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
             },
-            axisLabel: {
-                interval: 0,
-                rotate: 30
-            }
-        }],
-        yAxis : [{
-            type : 'value'
-        }],
-        series : [{
-            name:'数量',
-            type: 'bar',
-            barWidth: '60%',
-            data: data.value
-        }]
-    };
-    
-    // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option);
-    return myChart;
+            grid: {
+                left: '3%',
+                right: '4%',
+                containLabel: true
+            },
+            xAxis : [{
+                type : 'category',
+                data : data.name,
+                axisTick: {
+                    alignWithLabel: true
+                },
+                axisLabel: {
+                    interval: 0,
+                    rotate: 30
+                }
+            }],
+            yAxis : [{
+                type : 'value'
+            }],
+            series : [{
+                name:'数量',
+                type: 'bar',
+                barWidth: '60%',
+                data: data.value
+            }]
+        };
+        
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    }, 0)
 };
 
 var renderCharts2 = function (id, data) {
-    var myChart = echarts.init(document.getElementById(id));
-    var option = {
-        color: ['#3398DB'],
-        tooltip : {
-            trigger: 'axis',
-            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-            }
-        },
-        grid: {
-            left: '3%',
-            right: '4%',
-            containLabel: true
-        },
-        xAxis : [{
-            type : 'category',
-            data : data.name,
-            axisTick: {
-                alignWithLabel: true
+    var newDom = util.resetChart(id);
+    setTimeout(function () {
+        var myChart = echarts.init(newDom[0]);
+        var option = {
+            color: ['#3398DB'],
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
             },
-            axisLabel: {
-                interval: 0,
-                rotate: 30
-            }
-        }],
-        yAxis : [{
-            type : 'value'
-        }],
-        dataZoom: [{
-            type: 'slider',
-            show: true,
-            startValue: 0,
-            endValue: 14
-        }, {
-            type: 'inside',
-            startValue: 0,
-            endValue: 19
-        }],
-        series : [{
-            name:'数量',
-            type: 'bar',
-            barWidth: '60%',
-            data: data.value
-        }]
-    };
-    
-    // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option);
-    return myChart;
+            grid: {
+                left: '3%',
+                right: '4%',
+                containLabel: true
+            },
+            xAxis : [{
+                type : 'category',
+                data : data.name,
+                axisTick: {
+                    alignWithLabel: true
+                },
+                axisLabel: {
+                    interval: 0,
+                    rotate: 30
+                }
+            }],
+            yAxis : [{
+                type : 'value'
+            }],
+            dataZoom: [{
+                type: 'slider',
+                show: true,
+                startValue: 0,
+                endValue: 14
+            }, {
+                type: 'inside',
+                startValue: 0,
+                endValue: 19
+            }],
+            series : [{
+                name:'数量',
+                type: 'bar',
+                barWidth: '60%',
+                data: data.value
+            }]
+        };
+        
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    }, 0);
 };
 
 var renderWordCloud = function (data) {
-    var chart = echarts.init(document.getElementById('chart3'));
-    var option = {
-        tooltip: {},
-        series: [ {
-            type: 'wordCloud',
-            gridSize: 4,
-            sizeRange: [12, 60],
-            rotationRange: [-90, 90],
-            rotationStep: 90,
-            shape: 'circle',
-            width: '95%',
-            height: '95%',
-            drawOutOfBound: true,
-            textStyle: {
-                normal: {
-                    color: function () {
-                        return 'rgb(' + [
-                            Math.round(Math.random() * 160),
-                            Math.round(Math.random() * 160),
-                            Math.round(Math.random() * 160)
-                        ].join(',') + ')';
-                    }
-                },
-                emphasis: {
-                    shadowBlur: 10,
-                    shadowColor: '#333'
-                }
-            },
-            data: data
-        } ]
-    };
-    chart.setOption(option);
-    return chart;
+    var newDom = util.resetChart('chart3');
+    setTimeout(function () {
+        try {
+            var myChart = echarts.init(newDom[0]);
+            var option = {
+                tooltip: {},
+                series: [ {
+                    type: 'wordCloud',
+                    gridSize: 4,
+                    sizeRange: [12, 60],
+                    rotationRange: [-90, 90],
+                    rotationStep: 90,
+                    shape: 'circle',
+                    width: '95%',
+                    height: '95%',
+                    drawOutOfBound: true,
+                    textStyle: {
+                        normal: {
+                            color: function () {
+                                return 'rgb(' + [
+                                    Math.round(Math.random() * 160),
+                                    Math.round(Math.random() * 160),
+                                    Math.round(Math.random() * 160)
+                                ].join(',') + ')';
+                            }
+                        },
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowColor: '#333'
+                        }
+                    },
+                    data: data
+                } ]
+            };
+            myChart.setOption(option);
+        } catch (e) {
+            $('#chart3').html(showError('浏览器不支持云字符插件'));
+        }
+    }, 0);
 };
 
 var getAttentionTop10 = function (type) {
@@ -165,8 +173,8 @@ var getAttentionTop10 = function (type) {
         dataType: 'json',
         success: function (res) {
             if (res.status === 0) {
-                chart1 && chart1.dispose();
-                chart1 = renderCharts('chart1', dataCovert(res.data));
+                $('#chart1').html('');
+                renderCharts('chart1', dataCovert(res.data));
             } else {
                 $('#chart1').html(loadFail);
             }
@@ -185,12 +193,8 @@ var getAttention = function (type) {
         dataType: 'json',
         success: function (res) {
             if (res.status === 0) {
-                try {
-                    chart3 && chart3.dispose();
-                    chart3 = renderWordCloud(res.data.slice(0, 150));
-                } catch (error) {
-                    $('#chart3').html(showError('浏览器可能不支持'));
-                }
+                $('#chart3').html('');
+                renderWordCloud(res.data.slice(0, 150));
             } else {
                 $('#chart3').html(loadFail);
             }
@@ -209,8 +213,8 @@ var getClass = function (type) {
         dataType: 'json',
         success: function (res) {
             if (res.status === 0) {
-                chart2 && chart2.dispose();
-                chart2 = renderCharts2('chart2', dataCovert(res.data));
+                $('#chart2').html('');
+                renderCharts2('chart2', dataCovert(res.data));
             } else {
                 $('#chart2').html(loadFail);
             }
@@ -240,6 +244,7 @@ $(function () {
         $this.addClass('active').siblings('.active').removeClass('active');
         var datafor = $this.parent().attr('data-for');
         var type = $this.attr('data-value');
+        type = encodeURIComponent(type);
         if (datafor === 'chart1') {
             getAttentionTop10(type);
         }

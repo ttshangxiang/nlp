@@ -16,99 +16,102 @@ var showError = function (str) {
 
 var loadFail = showError();
 
-var chart4, chart5;
-
 var renderPies = function (id, data) {
-    var chart = echarts.init(document.getElementById(id));
-    var option = {
-        title : {
-            text: '累计用信金额超授信金额不良占比',
-            x:'center'
-        },
-        tooltip : {
-            trigger: 'item',
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
-        },
-        legend: {
-            orient: 'vertical',
-            left: 'left',
-            data: ['一致','不一致']
-        },
-        series : [
-            {
-                name: '数量',
-                type: 'pie',
-                radius : '55%',
-                center: ['50%', '60%'],
-                data: data,
-                itemStyle: {
-                    emphasis: {
-                        shadowBlur: 10,
-                        shadowOffsetX: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+    var newDom = util.resetChart(id);
+    setTimeout(function () {
+        var myChart = echarts.init(newDom[0]);
+        var option = {
+            title : {
+                text: '累计用信金额超授信金额不良占比',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                data: ['一致','不一致']
+            },
+            series : [
+                {
+                    name: '数量',
+                    type: 'pie',
+                    radius : '55%',
+                    center: ['50%', '60%'],
+                    data: data,
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
                     }
                 }
-            }
-        ]
-    };
-    chart.setOption(option);
-    return chart;
+            ]
+        };
+        myChart.setOption(option);
+    }, 0);
 };
 
-var renderCharts2 = function (id, data, title) {
-    var myChart = echarts.init(document.getElementById(id));
-    var option = {
-        title: {
-            text: title || '各机构累计用信金额超授信金额笔数',
-            x:'center'
-        },
-        color: ['#3398DB'],
-        tooltip : {
-            trigger: 'axis',
-            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-            }
-        },
-        grid: {
-            left: '3%',
-            right: '4%',
-            containLabel: true
-        },
-        xAxis : [{
-            type : 'category',
-            data : data.name,
-            axisTick: {
-                alignWithLabel: true
+var renderCharts2 = function (id, data, title, addEvent) {
+    var newDom = util.resetChart(id);
+    setTimeout(function () {
+        var myChart = echarts.init(newDom[0]);
+        var option = {
+            title: {
+                text: title || '各机构累计用信金额超授信金额笔数',
+                x:'center'
             },
-            axisLabel: {
-                interval: 0,
-                rotate: 30
-            }
-        }],
-        yAxis : [{
-            type : 'value'
-        }],
-        dataZoom: [{
-            type: 'slider',
-            show: true,
-            startValue: 0,
-            endValue: 14
-        }, {
-            type: 'inside',
-            startValue: 0,
-            endValue: 14
-        }],
-        series : [{
-            name:'数量',
-            type: 'bar',
-            barWidth: '60%',
-            data: data.value
-        }]
-    };
-    
-    // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option);
-    return myChart;
+            color: ['#3398DB'],
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                containLabel: true
+            },
+            xAxis : [{
+                type : 'category',
+                data : data.name,
+                axisTick: {
+                    alignWithLabel: true
+                },
+                axisLabel: {
+                    interval: 0,
+                    rotate: 30
+                }
+            }],
+            yAxis : [{
+                type : 'value'
+            }],
+            dataZoom: [{
+                type: 'slider',
+                show: true,
+                startValue: 0,
+                endValue: 14
+            }, {
+                type: 'inside',
+                startValue: 0,
+                endValue: 14
+            }],
+            series : [{
+                name:'数量',
+                type: 'bar',
+                barWidth: '60%',
+                data: data.value
+            }]
+        };
+        
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+        addEvent && addEvent(myChart);
+    }, 0);
 };
 
 var pieConvert = function (list) {
@@ -148,9 +151,8 @@ var getData2 = function (suc, err) {
         success: function (res) {
             suc && suc(res);
             if (res.status === 0) {
-                chart5 && chart5.dispose();
-                chart5 = renderCharts2('chart5', lineConvert(res.data));
-                addEvent();
+                $('#chart5').html('');
+                renderCharts2('chart5', lineConvert(res.data), '', addEvent);
             } else {
                 $('#chart5').html(loadFail);
             }
@@ -171,8 +173,8 @@ var getData3 = function (params) {
         dataType: 'json',
         success: function (res) {
             if (res.status === 0) {
-                chart5 && chart5.dispose();
-                chart5 = renderCharts2('chart5', lineConvert(res.data), params.name);
+                $('#chart5').html('');
+                renderCharts2('chart5', lineConvert(res.data), params.name);
             } else {
                 $('#chart5').html(loadFail);
             }
@@ -183,8 +185,8 @@ var getData3 = function (params) {
     });
 };
 
-var addEvent = function () {
-    chart5.on('click', function (params) {
+var addEvent = function (chart) {
+    chart.on('click', function (params) {
         getData3(params);
     });
 };
@@ -193,8 +195,8 @@ var count2Init = function () {
     $('#chart4').html(loading);
     getData2(function (res) {
         if (res.status === 0) {
-            chart4 && chart4.dispose();
-            chart4 = renderPies('chart4', pieConvert(res.data));
+            $('#chart4').html('');
+            renderPies('chart4', pieConvert(res.data));
         } else {
             $('#chart4').html(loadFail);
         }
